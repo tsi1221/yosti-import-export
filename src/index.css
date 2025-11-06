@@ -1,1 +1,8 @@
 @import "tailwindcss";
+
+@import "antd/dist/reset.css";
+
+/* optional: your own custom styles */
+body {
+  font-family: 'Inter', sans-serif;
+}

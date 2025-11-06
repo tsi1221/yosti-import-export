@@ -44,15 +44,15 @@ const statusColors: Record<string, string> = {
 const MetricCard: React.FC<Metric> = ({ title, value, icon: Icon }) => (
   <Card
     bordered={false}
-    className="flex items-center justify-between bg-indigo-700 rounded-xl text-white shadow-md hover:shadow-lg transition duration-300 p-3"
+    className="flex items-center  justify-between bg-indigo-700 rounded-xl text-white shadow-md hover:shadow-lg transition duration-300 p-3"
   >
     <div className="flex items-center space-x-3">
-      <div className="p-2 rounded-lg bg-indigo-700 text-white text-2xl flex items-center justify-center">
+      <div className="p-2 rounded-lg bg-[#0F3952] text-white text-2xl flex items-center justify-center">
         <Icon />
       </div>
       <div>
-        <p className="text-xs font-medium opacity-90">{title}</p>
-        <h2 className="text-xl font-semibold">{value}</h2>
+        <p className="text-6 font-medium opacity-90">{title}</p>
+        <h2 className="text-9 font-semibold">{value}</h2>
       </div>
     </div>
   </Card>
@@ -91,7 +91,7 @@ const Dashboard: React.FC = () => {
       <h1 className="text-xl font-medium text-gray-900 mb-6">Dashboard Overview</h1>
 
       {/* Metrics Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid border: 2px solid #0F3952 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {metricData.map((metric) => (
           <MetricCard
             key={metric.title}

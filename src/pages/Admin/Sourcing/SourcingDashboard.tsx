@@ -1,6 +1,19 @@
 import React, { useState, useMemo } from "react";
-import { Table, Button, Tag, message, Space, Dropdown, Checkbox, Input } from "antd";
-import { PlusOutlined, FilterOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  Table,
+  Button,
+  Tag,
+  message,
+  Space,
+  Dropdown,
+  Checkbox,
+  Input,
+} from "antd";
+import {
+  PlusOutlined,
+  FilterOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import dayjs from "dayjs";
 import SourcingFormDrawer from "./SourcingFormDrawer";
 import ShowDetails from "./ShowDetails";
@@ -57,14 +70,15 @@ const SourcingDashboard: React.FC = () => {
   const [regionFilter, setRegionFilter] = useState<string[]>([]);
   const [deadlineOrder, setDeadlineOrder] = useState<string | null>(null);
   const [searchText, setSearchText] = useState("");
-  const [detailsRequest, setDetailsRequest] = useState<SourcingRequest | null>(null);
+  const [detailsRequest, setDetailsRequest] =
+    useState<SourcingRequest | null>(null);
   const [detailsVisible, setDetailsVisible] = useState(false);
 
   // --- Filtered & Sorted Data ---
   const filteredData = useMemo(() => {
     let filtered = [...data];
 
-    // --- Search Filter (Product name & Quantity only) ---
+    // --- Search Filter (Product name & Quantity) ---
     if (searchText) {
       const text = searchText.toLowerCase();
       filtered = filtered.filter(
@@ -81,14 +95,22 @@ const SourcingDashboard: React.FC = () => {
 
     // --- Region Filter ---
     if (regionFilter.length > 0) {
-      filtered = filtered.filter((item) => regionFilter.includes(item.supplier_region));
+      filtered = filtered.filter((item) =>
+        regionFilter.includes(item.supplier_region)
+      );
     }
 
     // --- Deadline Sorting ---
     if (deadlineOrder === "nearest") {
-      filtered.sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
+      filtered.sort(
+        (a, b) =>
+          new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
+      );
     } else if (deadlineOrder === "farthest") {
-      filtered.sort((a, b) => new Date(b.deadline).getTime() - new Date(a.deadline).getTime());
+      filtered.sort(
+        (a, b) =>
+          new Date(b.deadline).getTime() - new Date(a.deadline).getTime()
+      );
     }
 
     return filtered;
@@ -151,7 +173,8 @@ const SourcingDashboard: React.FC = () => {
       title: "Product",
       dataIndex: "product_name",
       key: "product_name",
-      sorter: (a: SourcingRequest, b: SourcingRequest) => a.product_name.localeCompare(b.product_name),
+      sorter: (a: SourcingRequest, b: SourcingRequest) =>
+        a.product_name.localeCompare(b.product_name),
     },
     {
       title: "Description",
@@ -208,7 +231,12 @@ const SourcingDashboard: React.FC = () => {
       dataIndex: "status",
       key: "status",
       render: (status: string) => {
-        const color = status === "open" ? "orange" : status === "quoted" ? "blue" : "green";
+        const color =
+          status === "open"
+            ? "orange"
+            : status === "quoted"
+            ? "blue"
+            : "green";
         return <Tag color={color}>{status.toUpperCase()}</Tag>;
       },
     },
@@ -232,9 +260,24 @@ const SourcingDashboard: React.FC = () => {
   return (
     <div style={{ padding: 32, background: "#fff", borderRadius: 10 }}>
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 10,
+        }}
+      >
         <h2 style={{ margin: 0, fontWeight: 600 }}>Sourcing Requests</h2>
-        <Button type="primary" icon={<PlusOutlined />} onClick={() => setDrawerVisible(true)}>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => setDrawerVisible(true)}
+          style={{
+            backgroundColor: "#0F3952",
+            borderColor: "#0F3952",
+          }}
+        >
           New Request
         </Button>
       </div>
@@ -248,7 +291,7 @@ const SourcingDashboard: React.FC = () => {
           suffix={
             <div
               style={{
-                backgroundColor: "#1890ff",
+                backgroundColor: "#0F3952",
                 padding: "8px 8px",
                 borderRadius: "0 4px 4px 0",
                 display: "flex",
@@ -270,7 +313,13 @@ const SourcingDashboard: React.FC = () => {
       </div>
 
       {/* Table */}
-      <Table dataSource={filteredData} columns={columns} rowKey="request_id" pagination={{ pageSize: 4 }} bordered />
+      <Table
+        dataSource={filteredData}
+        columns={columns}
+        rowKey="request_id"
+        pagination={{ pageSize: 4 }}
+        bordered
+      />
 
       {/* Drawer for adding new request */}
       <SourcingFormDrawer
@@ -279,7 +328,12 @@ const SourcingDashboard: React.FC = () => {
         onSubmit={(newReq) => {
           setData([
             ...data,
-            { ...newReq, request_id: `REQ00${data.length + 1}`, status: "open", deadline: dayjs().format("YYYY-MM-DD") },
+            {
+              ...newReq,
+              request_id: `REQ00${data.length + 1}`,
+              status: "open",
+              deadline: dayjs().format("YYYY-MM-DD"),
+            },
           ]);
           message.success("Sourcing request added successfully!");
         }}

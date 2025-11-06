@@ -53,7 +53,7 @@ const TestimonialsSection: React.FC = () => {
         {/* Left Arrow */}
         <button
           onClick={() => carouselRef.current.prev()}
-          className="absolute left-0 top-1/2 transform  -ml-15 -translate-y-1/2 z-10 text-blue-500 text-2xl bg-white rounded-full p-3 shadow-lg hover:bg-gray-100"
+          className="absolute left-0 top-1/2 transform   -translate-y-1/2 z-30 text-blue-500 text-2xl bg-white rounded-full p-3 shadow-lg hover:bg-gray-100"
         >
           <LeftOutlined />
         </button>
@@ -61,7 +61,7 @@ const TestimonialsSection: React.FC = () => {
         {/* Right Arrow */}
         <button
           onClick={() => carouselRef.current.next()}
-          className="absolute right-0 top-1/2 transform -mr-15 -translate-y-1/2 z-10 text-blue-500 text-2xl bg-white rounded-full p-3 shadow-lg hover:bg-gray-100"
+          className="absolute right-0 top-1/2 transform  -translate-y-1/2 z-30 text-blue-500 text-2xl bg-white rounded-full p-3 shadow-lg hover:bg-gray-100"
         >
           <RightOutlined />
         </button>

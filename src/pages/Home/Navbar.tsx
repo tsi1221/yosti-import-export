@@ -87,9 +87,9 @@ const Navbar: React.FC = () => {
             onClick={handleMenuClick} // <-- handle click
           />
         )}
-        <Button icon={<LoginOutlined />} type="text">
+       <a href="/login"> <Button  icon={<LoginOutlined />} type="text">
           Login
-        </Button>
+        </Button></a>
       </div>
 
       <div className="md:hidden">

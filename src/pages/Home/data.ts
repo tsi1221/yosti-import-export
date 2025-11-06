@@ -1,0 +1,66 @@
+export const blogData=[
+    {
+    img: "https://media.istockphoto.com/id/1339057752/photo/a-large-container-cargo-ship-in-motion.webp?s=612x612&w=is&k=20&c=fhTKPqDBFA3PrHp2JdaHAvJ6Nd2V4v5GZwNilZx8xno=",
+    title: "Top 5 Tools for Import/Export Businesses in 2025",
+    detail: "Discover the essential tools every import/export business should use to streamline operations, manage shipments, and handle international payments efficiently.",
+    author: "John Doe",
+    date: new Date("2025-11-01"),
+  },
+  {
+    img: "https://media.istockphoto.com/id/1336541994/photo/aerial-top-down-view-of-a-large-container-carrier-ship.webp?s=612x612&w=is&k=20&c=JOdsZdIKRXJsMeh5ptBe4gYnqe0uObVUoypEOqPynbE=",
+    title: "How to Build a Successful Import/Export Website",
+    detail: "Learn the step-by-step process to create a professional website for your import/export business, including tips on product listings, payment gateways, and compliance.",
+    author: "Mary Smith",
+    date: new Date("2025-10-25"),
+  },
+  {
+    img: "https://media.istockphoto.com/id/1406705759/photo/stack-of-blue-container-boxes-with-sky-background-cargo-freight-shipping-for-import-and.webp?s=612x612&w=is&k=20&c=Si2CUhDYIXM2FoSVJxRbe8XvNEadQTWhA6WMcECqo30=",
+    title: "5 Common Mistakes in Export Websites and How to Avoid Them",
+    detail: "Many exporters lose clients due to poorly designed websites. This article highlights common pitfalls and practical solutions to make your website user-friendly and trustworthy.",
+    author: "Alex Johnson",
+    date: new Date("2025-10-30"),
+  },
+  {
+    img: "https://media.istockphoto.com/id/1336541994/photo/aerial-top-down-view-of-a-large-container-carrier-ship.webp?s=612x612&w=is&k=20&c=JOdsZdIKRXJsMeh5ptBe4gYnqe0uObVUoypEOqPynbE=",
+    title: "How to Build a Successful Import/Export Website",
+    detail: "Learn the step-by-step process to create a professional website for your import/export business, including tips on product listings, payment gateways, and compliance.",
+    author: "Mary Smith",
+    date: new Date("2025-10-25"),
+  },
+  {
+    img: "https://media.istockphoto.com/id/1406705759/photo/stack-of-blue-container-boxes-with-sky-background-cargo-freight-shipping-for-import-and.webp?s=612x612&w=is&k=20&c=Si2CUhDYIXM2FoSVJxRbe8XvNEadQTWhA6WMcECqo30=",
+    title: "5 Common Mistakes in Export Websites and How to Avoid Them",
+    detail: "Many exporters lose clients due to poorly designed websites. This article highlights common pitfalls and practical solutions to make your website user-friendly and trustworthy.",
+    author: "Alex Johnson",
+    date: new Date("2025-10-30"),
+  },
+  {
+    img: "https://media.istockphoto.com/id/1336541994/photo/aerial-top-down-view-of-a-large-container-carrier-ship.webp?s=612x612&w=is&k=20&c=JOdsZdIKRXJsMeh5ptBe4gYnqe0uObVUoypEOqPynbE=",
+    title: "How to Build a Successful Import/Export Website",
+    detail: "Learn the step-by-step process to create a professional website for your import/export business, including tips on product listings, payment gateways, and compliance.",
+    author: "Mary Smith",
+    date: new Date("2025-10-25"),
+  },
+  {
+    img: "https://media.istockphoto.com/id/1406705759/photo/stack-of-blue-container-boxes-with-sky-background-cargo-freight-shipping-for-import-and.webp?s=612x612&w=is&k=20&c=Si2CUhDYIXM2FoSVJxRbe8XvNEadQTWhA6WMcECqo30=",
+    title: "5 Common Mistakes in Export Websites and How to Avoid Them",
+    detail: "Many exporters lose clients due to poorly designed websites. This article highlights common pitfalls and practical solutions to make your website user-friendly and trustworthy.",
+    author: "Alex Johnson",
+    date: new Date("2025-10-30"),
+  },
+
+  {
+    img: "https://media.istockphoto.com/id/1336541994/photo/aerial-top-down-view-of-a-large-container-carrier-ship.webp?s=612x612&w=is&k=20&c=JOdsZdIKRXJsMeh5ptBe4gYnqe0uObVUoypEOqPynbE=",
+    title: "How to Build a Successful Import/Export Website",
+    detail: "Learn the step-by-step process to create a professional website for your import/export business, including tips on product listings, payment gateways, and compliance.",
+    author: "Mary Smith",
+    date: new Date("2025-10-25"),
+  },
+  {
+    img: "https://media.istockphoto.com/id/1406705759/photo/stack-of-blue-container-boxes-with-sky-background-cargo-freight-shipping-for-import-and.webp?s=612x612&w=is&k=20&c=Si2CUhDYIXM2FoSVJxRbe8XvNEadQTWhA6WMcECqo30=",
+    title: "5 Common Mistakes in Export Websites and How to Avoid Them",
+    detail: "Many exporters lose clients due to poorly designed websites. This article highlights common pitfalls and practical solutions to make your website user-friendly and trustworthy.",
+    author: "Alex Johnson",
+    date: new Date("2025-10-30"),
+  },
+]

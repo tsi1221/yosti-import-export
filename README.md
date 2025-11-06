@@ -58,5 +58,69 @@ const App: React.FC = () => {
 
 export default App;
 =======
-# yosti-import-export
+# import React from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+
+import Navbar from "./pages/Home/Navbar";
+import Footer from "./pages/Home/Footer";
+import HeroSection from "./pages/Home/HeroSection";
+import AboutSection from "./pages/Home/AboutSection";
+import ServicesSection from "./pages/Home/ServicesSection";
+import ExportProductsSection from "./pages/Home/ExportProductsSection";
+// import BlogSection from "./pages/Home/BlogSection";
+import TestimonialsSection from "./pages/Home/TestimonialsSection";
+import ContactSection from "./pages/Home/ContactSection";
+import Blog from "./pages/Home/Blog";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+
+const App: React.FC = () => {
+  const location = useLocation();
+
+  // Pages without Navbar/Footer
+  const noLayoutPages = ["/login", "/register"];
+  const hideLayout = noLayoutPages.includes(location.pathname);
+
+  return (
+    <>
+      {!hideLayout && <Navbar />}
+
+      <div className="flex-1">
+        <Routes>
+          {/* Home Page */}
+          <Route
+            path="/"
+            element={
+              <>
+                <HeroSection />
+                <ExportProductsSection />
+                <ServicesSection />
+                <TestimonialsSection />
+              </>
+            }
+          />
+
+          {/* Other Pages */}
+          <Route path="/about" element={<AboutSection />} />
+          {/* <Route path="/blog" element={<BlogSection />} /> */}
+          <Route path="/exports/coffee" element={<ExportProductsSection />} />
+          <Route path="/exports/spices" element={<ExportProductsSection />} />
+          <Route path="/exports/oilseeds" element={<ExportProductsSection />} />
+          <Route path="/testimonials" element={<TestimonialsSection />} />
+          <Route path="/contact" element={<ContactSection />} />
+          <Route path="blog/news" element={<Blog />} />
+          <Route path="/blog/insights" element={<Blog />} />
+          {/* Login/Register */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </div>
+
+      {!hideLayout && <Footer />}
+    </>
+  );
+};
+
+export default App;
+
 >>>>>>> 4a1e96c26f7f2c49f99e5570f0cd90f946a928ce
