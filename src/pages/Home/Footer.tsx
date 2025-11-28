@@ -5,88 +5,85 @@ import {
   LinkedinOutlined,
   InstagramOutlined,
 } from "@ant-design/icons";
+import yostiLogo from "../../assets/yostilogo.png";
 
 const Footer: React.FC = () => {
   const columns = [
     {
-      title: "Logo",
+      title: "Our Company",
       links: [
-        { label: "Yosti Import & Export", href: "#" },
-        { label: "yosti2@gmail.com", href: "mailto:yosti2@gmail.com" },
-        { label: "+251 9********", href: "tel:+2519********" },
+        { label: "Who We Are", href: "#" },
+        { label: "About Company", href: "#" },
+        { label: "Services We Provide", href: "#" },
+        { label: "Our Contact", href: "#" },
       ],
     },
     {
-      title: "Company",
+      title: "Our Services",
       links: [
-        { label: "About", href: "/about" },
-        { label: "Careers", href: "/careers" },
-        { label: "Contact", href: "/contact" },
+        { label: "Import Services", href: "#" },
+        { label: "Export Services", href: "#" },
+        { label: "Logistics Service", href: "#" },
+        { label: "Consulting", href: "#" },
       ],
     },
     {
-      title: "Services",
+      title: "Contact Details",
       links: [
-        { label: "Sourcing", href: "/services/product-sourcing" },
-        { label: "Logistics", href: "/services/shipping-logistics" },
-        { label: "Inspection", href: "/services/quality-inspection" },
-      ],
-    },
-    {
-      title: "Resources",
-      links: [
-        { label: "Blog", href: "/blog" },
-        { label: "FAQs", href: "/faqs" },
-        { label: "Export Lists", href: "/exports" },
-      ],
-    },
-    {
-      title: "Legal",
-      links: [
-        { label: "Terms", href: "/terms" },
-        { label: "Privacy", href: "/privacy" },
+        { label: "China and Ethiopia", href: "#" },
+        { label: "+251-911535147", href: "tel:+251911535147" },
+        { label: "+251-911997915", href: "tel:+251911997915" },
+        { label: "info@yosti.com", href: "mailto:info@yosti.com" },
       ],
     },
   ];
 
   return (
-    <footer className="bg-[#002b5b] text-white w-full">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-6 pt-28">
-        {/* Top section */}
-        <div className="flex flex-col lg:flex-row justify-between gap-8">
-          {/* Social + Branding */}
-          <div className="lg:w-1/4">
-            <h3 className="text-2xl font-semibold mb-4">Yosti</h3>
-            <p className="text-gray-300 mb-6">
-              Bridging the import-export gap with trust and transparency.
+    <footer className="bg-[#0F3952] text-white w-full">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 py-10 pt-24">
+        
+        {/* Top Section */}
+        <div className="flex flex-col lg:flex-row justify-between gap-12">
+          
+          {/* Brand + Social */}
+          <div className="lg:w-1/3">
+            <div className="flex items-center mb-4">
+              <img src={yostiLogo} alt="Yosti" className="w-12 h-12 mr-3" />
+              <h3 className="text-3xl font-extrabold text-yellow-400">Yosti</h3>
+            </div>
+
+            <p className="text-gray-300 mb-6 leading-relaxed">
+              Bridging the import-export gap with trust, efficiency, and
+              transparency. Your gateway to reliable global trade.
             </p>
-            <div className="flex space-x-4">
-              <a href="#" className="hover:text-gray-300 transition-colors">
-                <FacebookOutlined className="text-2xl" />
+
+            <div className="flex space-x-5">
+              <a className="text-yellow-400 text-2xl hover:text-yellow-300 transition">
+                <FacebookOutlined />
               </a>
-              <a href="#" className="hover:text-gray-300 transition-colors">
-                <TwitterOutlined className="text-2xl" />
+              <a className="text-yellow-400 text-2xl hover:text-yellow-300 transition">
+                <TwitterOutlined />
               </a>
-              <a href="#" className="hover:text-gray-300 transition-colors">
-                <LinkedinOutlined className="text-2xl" />
+              <a className="text-yellow-400 text-2xl hover:text-yellow-300 transition">
+                <LinkedinOutlined />
               </a>
-              <a href="#" className="hover:text-gray-300 transition-colors">
-                <InstagramOutlined className="text-2xl" />
+              <a className="text-yellow-400 text-2xl hover:text-yellow-300 transition">
+                <InstagramOutlined />
               </a>
             </div>
           </div>
 
-          {/* Footer Columns */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-10 lg:w-3/4">
-            {columns.slice(1).map((col, idx) => (
-              <div key={idx}>
-                <h4 className="text-lg mb-4 font-medium">{col.title}</h4>
-                <ul className="space-y-2">
-                  {col.links.map((link, linkIdx) => (
-                    <li key={linkIdx}>
+          {/* Columns */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:w-2/3">
+            {columns.map((col, index) => (
+              <div key={index}>
+                <h4 className="text-xl font-semibold mb-4">{col.title}</h4>
+                <ul className="space-y-3">
+                  {col.links.map((link, idx) => (
+                    <li key={idx}>
                       <a
                         href={link.href}
-                        className="hover:text-gray-300 transition-colors"
+                        className="text-gray-300 hover:text-yellow-400 transition"
                       >
                         {link.label}
                       </a>
@@ -96,14 +93,16 @@ const Footer: React.FC = () => {
               </div>
             ))}
           </div>
+
         </div>
 
         {/* Divider */}
-        <hr className="border-gray-500 my-8 " />
+        <hr className="border-gray-500 my-8" />
 
-        {/* Copyright */}
-        <p className="text-center text-gray-300  text-sm">
-          © 2025 Yosti Import & Export | Bridging Gap with Trust
+        {/* Bottom Text */}
+        <p className="text-center text-gray-300 text-sm leading-relaxed">
+          © 2025 Yosti Import & Export Trading  
+          <br />All rights reserved.
         </p>
       </div>
     </footer>

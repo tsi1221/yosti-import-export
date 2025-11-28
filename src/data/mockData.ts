@@ -1,0 +1,32 @@
+export const inspections = [
+  {
+    id: "1",
+    user_id: "USR001",
+    supplier_id: "SUP101",
+    product_type: "Electronics",
+    inspection_type: "sample",
+    date: "2025-11-05",
+    report_url: "https://example.com/report1.pdf",
+    photo_video_required: "https://example.com/photo1.jpg",
+  },
+  {
+    id: "2",
+    user_id: "USR002",
+    supplier_id: "SUP102",
+    product_type: "Textiles",
+    inspection_type: "pre-shipment",
+    date: "2025-11-06",
+    report_url: "https://example.com/report2.pdf",
+    photo_video_required: "https://example.com/photo2.jpg",
+  },
+  {
+    id: "3",
+    user_id: "USR003",
+    supplier_id: "SUP103",
+    product_type: "Furniture",
+    inspection_type: "production",
+    date: "2025-11-07",
+    report_url: "https://example.com/report3.pdf",
+    photo_video_required: "https://example.com/video.mp4",
+  },
+];

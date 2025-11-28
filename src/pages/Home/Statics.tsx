@@ -1,6 +1,31 @@
+import type { ReactNode } from "react";
 import { OrderedListOutlined, ShopOutlined, TruckOutlined, UserOutlined } from "@ant-design/icons";
-import StaticsCard from "./StaticsCard";
 
+// Single statistics card
+type StaticsCardProps = {
+  icon: ReactNode;
+  name: string;
+  num: number;
+};
+
+function StaticsCard({ icon, name, num }: StaticsCardProps) {
+  return (
+    <div className="bg-white w-60 h-28 relative rounded-md shadow-md flex flex-col items-center justify-center pt-10">
+      {/* Icon container */}
+      <div className="bg-[#0F3952] text-yellow-400 w-16 h-16 flex items-center justify-center text-3xl rounded-full absolute -top-8">
+        {icon}
+      </div>
+
+      {/* Stats content */}
+      <div className="flex items-center gap-3 mt-4">
+        <p className="text-[#0F3952] text-3xl font-bold">{num}</p>
+        <p className="uppercase text-[#0F3952] font-medium">{name}</p>
+      </div>
+    </div>
+  );
+}
+
+// Data for cards
 const staticsData = [
   { icon: <OrderedListOutlined />, name: "Orders Processed", num: 124 },
   { icon: <UserOutlined />, name: "Total Customers", num: 879 },
@@ -8,6 +33,7 @@ const staticsData = [
   { icon: <ShopOutlined />, name: "Total Suppliers", num: 56 },
 ];
 
+// Container component for all stats
 function Statics() {
   return (
     <div className="bg-black w-full py-16 flex justify-center items-center">

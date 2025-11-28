@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Skeleton } from "antd";
-import aboutImg from "../../assets/about.png";
+import aboutImg from "../../assets/image1.png";
+import headerImg from "../../assets/about2.png";
 
 const AboutSection: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -11,61 +12,97 @@ const AboutSection: React.FC = () => {
   }, []);
 
   return (
-    <section
-      className="min-h-[80vh] flex flex-col justify-center -mt-14 bg-gray-50 py-2 md:py-24"
-      id="about"
-    >
-      {/* Heading */}
-      <div className="text-center mb-12">
+    <section className="w-full bg-gray-50" id="about">
+
+      {/* Hero Header */}
+      <div className="w-full h-[65vh] relative">
         {loading ? (
-          <Skeleton.Input active size="small" className="w-32 h-6 mx-auto" />
+          <Skeleton.Image active className="w-full h-full" />
         ) : (
-          <>
-            <h2 className="text-lg sm:text-2xl md:text-3xl mb-3 font-semibold text-gray-900 tracking-tight">
-              About Us
-            </h2>
-            <div className="w-20 h-0.5 bg-[#0021f5b4] mx-auto rounded-full"></div>
-          </>
+          <img
+            src={headerImg}
+            alt="About Header"
+            className="w-full h-full object-cover"
+          />
         )}
+
+        {/* Overlay Text */}
+        <div className="absolute inset-0 bg-black/30 flex items-center justify-center px-6">
+          <h1 className="text-3xl md:text-5xl font-extrabold text-[#FFD700] text-center leading-snug drop-shadow-lg">
+            Connecting Markets Between China and Africa
+          </h1>
+        </div>
       </div>
 
-      {/* Content */}
-      <div className="container mx-auto px-2 md:px-6 flex flex-col lg:flex-row items-center gap-4 lg:gap-20">
-        {/* Text Section */}
+      {/* Title */}
+      <div className="text-center mt-12 mb-12">
+        <h2 className="text-2xl md:text-3xl font-extrabold text-[#0F3952]">
+          About Us
+        </h2>
+        <div className="w-20 h-1 bg-[#FFD700] mx-auto rounded-full mt-2"></div>
+      </div>
+
+      {/* Main Content */}
+      <div className="container mx-auto px-4 md:px-6 flex flex-col lg:flex-row items-center gap-10 mb-16">
+
+        {/* Text */}
         <div className="flex-1 text-center lg:text-left">
+          <p
+            className="text-[#0F3952] text-base md:text-lg leading-relaxed mb-4 animate-fadeIn opacity-0"
+            style={{ animation: "fadeIn 0.9s ease-in-out forwards" }}
+          >
+            Yosti Import & Export bridges China and Africa by offering reliable
+            sourcing, inspection, logistics, and after-sales support tailored for
+            businesses and individuals.
+          </p>
+
+          <p
+            className="text-[#0F3952] text-base md:text-lg leading-relaxed animate-fadeIn opacity-0"
+            style={{ animation: "fadeIn 1.1s ease-in-out forwards" }}
+          >
+            Our commitment to transparency, affordability, and seamless
+            communication has positioned us as a trusted partner for international
+            trade solutions.
+          </p>
+        </div>
+
+        {/* Image */}
+        <div className="flex-1 flex justify-center">
           {loading ? (
-            <div className="space-y-3">
-              <Skeleton active paragraph={{ rows: 3 }} />
-            </div>
+            <Skeleton.Image active className="w-full h-80 rounded-lg" />
           ) : (
-            <div
-              className="animate-fadeIn"
-              style={{ animation: "fadeIn 0.8s ease-in-out" }}
-            >
-              <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-1 px-0 md:px-0">
-                Yosti Import & Export connects Africa and China, simplifying global
-                trade with transparent sourcing, verification, shipping, and
-                inspection services —  <br /> empowering importers and exporters to build {""}
-                trust, ensure quality, and collaborate confidently through seamless,
-                efficient trade solutions. <br /> <br />
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-Ut enim ad minim veniam,
-              </p>
-              <a
-                href="/about"
-                className="inline-block mt-4 text-[#0021f5b4] hover:text-[#001ac4] font-medium text-sm transition-colors"
-              >
-                Learn More →
-              </a>
-            </div>
+            <img
+              src={aboutImg}
+              alt="About"
+              className="w-full h-80 object-cover border-2 border-[#FFD700] rounded-lg shadow-lg animate-fadeIn opacity-0"
+              style={{ animation: "fadeIn 1.2s ease-in-out forwards" }}
+            />
           )}
         </div>
-
-        {/* Image Section */}
-        <div className="flex-1 flex justify-center">
-          <img src={aboutImg} className="w-full h-82 border-r-2 rounded-lg" alt="" />
-        </div>
       </div>
+
+      {/* Mission Section */}
+      <div className="container mx-auto px-4 md:px-6 mb-20">
+        <h3 className="text-xl md:text-2xl font-bold mb-3 text-[#0F3952]">
+          Our Mission
+        </h3>
+        <p className="text-[#0F3952] text-base md:text-lg leading-relaxed max-w-3xl">
+          To deliver secure, transparent, and efficient import-export solutions
+          that strengthen trade between China and Africa — with a special focus
+          on empowering businesses in Ethiopia.
+        </p>
+      </div>
+
+      {/* Animations */}
+      <style>
+        {`
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          .animate-fadeIn { animation: fadeIn 0.8s ease-in-out forwards; }
+        `}
+      </style>
     </section>
   );
 };

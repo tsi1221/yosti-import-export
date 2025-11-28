@@ -1,6 +1,6 @@
 // src/components/Sidebar.tsx
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   DashboardOutlined,
   AppstoreOutlined,
@@ -8,18 +8,21 @@ import {
   CustomerServiceOutlined,
   TruckOutlined,
   SafetyOutlined,
-  CheckCircleOutlined,
   DollarCircleOutlined,
-  BarChartOutlined,
   UserOutlined,
   FileTextOutlined,
-  SettingOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-} from '@ant-design/icons';
-import yostiLogo from '../assets/yostilogo.png'; // Import your logo
+} from "@ant-design/icons";
+import yostiLogo from "../assets/yostilogo.png";
 
-export type Role = 'admin' | 'super-admin' | 'supplier' | 'customer' | 'student';
+export type Role =
+  | "admin"
+  | "super-admin"
+  | "supplier"
+  | "buyer"
+  | "student"
+  | "logistics";
 
 interface SidebarProps {
   role: Role;
@@ -33,142 +36,135 @@ interface MenuItem {
   children?: MenuItem[];
 }
 
-// Sidebar menu items per role
+// Menu items per role with unique dashboard paths
 const menuItemsByRole: Record<Role, MenuItem[]> = {
-  customer: [
-    { key: 'dashboard', label: 'Dashboard', icon: <DashboardOutlined />, path: '/dashboard' },
-    { key: 'products', label: 'Products', icon: <AppstoreAddOutlined />, path: '/products' },
-    { key: 'sourcing', label: 'Sourcing', icon: <AppstoreOutlined />, path: '/sourcing' },
-    { key: 'shipments', label: 'Shipments', icon: <TruckOutlined />, path: '/shipments' },
-    { key: 'payments', label: 'Payments', icon: <DollarCircleOutlined />, path: '/payments' },
-    { key: 'support', label: 'Support', icon: <CustomerServiceOutlined />, path: '/support' },
+  buyer: [
+    { key: "dashboard", label: "Dashboard", icon: <DashboardOutlined />, path: "/buyer/dashboard" },
+    { key: "my-requests", label: "My Requests", icon: <AppstoreOutlined />, path: "/requests" },
+    { key: "my-quotes", label: "My Quotes", icon: <AppstoreAddOutlined />, path: "/quotes" },
+    { key: "my-shipments", label: "My Shipments", icon: <TruckOutlined />, path: "/shipments" },
+    { key: "my-inspections", label: "My Inspections", icon: <SafetyOutlined />, path: "/buyerinspection" },
+    { key: "my-trips", label: "My Trips", icon: <TruckOutlined />, path: "/trips" },
+    { key: "my-payments", label: "My Payments", icon: <DollarCircleOutlined />, path: "/payments" },
+    { key: "support", label: "Support", icon: <CustomerServiceOutlined />, path: "/support" },
+    { key: "blog", label: "Blog & News", icon: <FileTextOutlined />, path: "/blog/news" },
+    { key: "export-products", label: "Export Products", icon: <AppstoreAddOutlined />, path: "/products" },
+    { key: "profile", label: "Profile", icon: <UserOutlined />, path: "/buyerprofile" },
+    { key: "logout", label: "Logout", icon: <AppstoreOutlined />, path: "/" },
   ],
   supplier: [
-    { key: 'dashboard', label: 'Dashboard', icon: <DashboardOutlined />, path: '/dashboard' },
-    { key: 'products', label: 'Products', icon: <AppstoreAddOutlined />, path: '/products' },
-    { key: 'sourcing', label: 'Sourcing', icon: <AppstoreOutlined />, path: '/sourcing' },
-    { key: 'shipments', label: 'Shipments', icon: <TruckOutlined />, path: '/shipments' },
-    { key: 'payments', label: 'Payments', icon: <DollarCircleOutlined />, path: '/payments' },
-    { key: 'support', label: 'Support', icon: <CustomerServiceOutlined />, path: '/support' },
+    { key: "dashboard", label: "Dashboard", icon: <DashboardOutlined />, path: "/supplier/dashboard" },
+    // { key: "open-requests", label: "Open Requests", icon: <AppstoreOutlined />, path: "/open-requests" },
+    { key: "my-quotes", label: "Quotes", icon: <AppstoreAddOutlined />, path: "/my-quotes" },
+    { key: "my-inspections", label: "Inspections", icon: <SafetyOutlined />, path: "/my-inspections" },
+    { key: "profile", label: "Profile", icon: <UserOutlined />, path: "/SupplierProfile" },
+    { key: "verification-status", label: "Verification ", icon: <CustomerServiceOutlined />, path: "/verification-status" },
+    { key: "logout", label: "Logout", icon: <AppstoreOutlined />, path: "/" },
   ],
   student: [
-    { key: 'dashboard', label: 'Dashboard', icon: <DashboardOutlined />, path: '/dashboard' },
-    { key: 'inspection', label: 'Inspection', icon: <SafetyOutlined />, path: '/inspection' },
-    { key: 'shipments', label: 'Shipments', icon: <TruckOutlined />, path: '/shipments' },
-    { key: 'supplier', label: 'Supplier', icon: <AppstoreOutlined />, path: '/supplier' },
+    { key: "dashboard", label: "Dashboard", icon: <DashboardOutlined />, path: "/student/dashboard" },
+    { key: "communication", label: "Communicate with Staff/Admin", icon: <CustomerServiceOutlined />, path: "/communication" },
+    { key: "profile", label: "Profile", icon: <UserOutlined />, path: "/profile" },
+    { key: "logout", label: "Logout", icon: <AppstoreOutlined />, path: "/" },
+  ],
+  logistics: [
+    { key: "dashboard", label: "Dashboard", icon: <DashboardOutlined />, path: "/logistics/dashboard" },
+    { key: "all-shipments", label: "All Shipments", icon: <TruckOutlined />, path: "/shipmentsorder" },
+    { key: "new-booking", label: "New Booking", icon: <AppstoreAddOutlined />, path: "/new-booking" },
+    { key: "coordination", label: "Coordination with Yosti", icon: <CustomerServiceOutlined />, path: "/coordination" },
+    { key: "profile", label: "Profile", icon: <UserOutlined />, path: "/profile" },
+    { key: "logout", label: "Logout", icon: <AppstoreOutlined />, path: "/" },
   ],
   admin: [
-    { key: 'dashboard', label: 'Dashboard', icon: <DashboardOutlined />, path: '/dashboard' },
-    { key: 'products', label: 'Products', icon: <AppstoreAddOutlined />, path: '/products' },
-    { key: 'sourcing', label: 'Sourcing', icon: <AppstoreOutlined />, path: '/sourcing' },
-    { key: 'support', label: 'Support', icon: <CustomerServiceOutlined />, path: '/support' },
-    { key: 'shipments', label: 'Shipments', icon: <TruckOutlined />, path: '/shipments' },
-    { key: 'inspections', label: 'Inspections', icon: <SafetyOutlined />, path: '/inspections' },
-    { key: 'verifications', label: 'Verifications', icon: <CheckCircleOutlined />, path: '/verifications' },
-    { key: 'payments', label: 'Payments', icon: <DollarCircleOutlined />, path: '/payments' },
-    { key: 'analytics', label: 'Analytics', icon: <BarChartOutlined />, path: '/analytics' },
-    {
-      key: 'admin-group',
-      label: 'Admin Settings',
-      icon: <SettingOutlined />,
-      children: [
-        { key: 'user-management', label: 'User Management', icon: <UserOutlined />, path: '/user-management' },
-        { key: 'blog-management', label: 'Blog Management', icon: <FileTextOutlined />, path: '/blog-management' },
-        { key: 'system-settings', label: 'System Settings', icon: <SettingOutlined />, path: '/system-settings' },
-      ],
-    },
+    { key: "dashboard", label: "Dashboard", icon: <DashboardOutlined />, path: "/admin/dashboard" },
+    { key: "blogs", label: "Blog&testmony", icon: <AppstoreAddOutlined />, path: "/blogs" },
+    { key: "sourcing", label: "Sourcing", icon: <AppstoreOutlined />, path: "/sourcing" },
+    { key: "support", label: "Support", icon: <CustomerServiceOutlined />, path: "/support" },
+    { key: "shipments", label: "Shipments", icon: <TruckOutlined />, path: "/shipments" },
+    { key: "inspections", label: "Inspections", icon: <SafetyOutlined />, path: "/inspections" },
+    { key: "payments", label: "Payments", icon: <DollarCircleOutlined />, path: "/payments" },
+    { key: "profile", label: "Profile", icon: <UserOutlined />, path: "/profile" },
+    { key: "logout", label: "Logout", icon: <AppstoreOutlined />, path: "/" },
   ],
-  'super-admin': [
-    { key: 'dashboard', label: 'Dashboard', icon: <DashboardOutlined />, path: '/dashboard' },
-    { key: 'products', label: 'Products', icon: <AppstoreAddOutlined />, path: '/products' },
-    { key: 'sourcing', label: 'Sourcing', icon: <AppstoreOutlined />, path: '/sourcing' },
-    { key: 'support', label: 'Support', icon: <CustomerServiceOutlined />, path: '/support' },
-    { key: 'shipments', label: 'Shipments', icon: <TruckOutlined />, path: '/shipments' },
-    { key: 'inspections', label: 'Inspections', icon: <SafetyOutlined />, path: '/inspections' },
-    { key: 'verifications', label: 'Verifications', icon: <CheckCircleOutlined />, path: '/verifications' },
-    { key: 'payments', label: 'Payments', icon: <DollarCircleOutlined />, path: '/payments' },
-    { key: 'analytics', label: 'Analytics', icon: <BarChartOutlined />, path: '/analytics' },
-    {
-      key: 'admin-group',
-      label: 'Admin Settings',
-      icon: <SettingOutlined />,
-      children: [
-        { key: 'user-management', label: 'User Management', icon: <UserOutlined />, path: '/user-management' },
-        { key: 'blog-management', label: 'Blog Management', icon: <FileTextOutlined />, path: '/blog-management' },
-        { key: 'system-settings', label: 'System Settings', icon: <SettingOutlined />, path: '/system-settings' },
-      ],
-    },
+  "super-admin": [
+    { key: "dashboard", label: "Dashboard", icon: <DashboardOutlined />, path: "/superadmin/dashboard" },
+    { key: "sourcing", label: "Sourcing Requests", icon: <AppstoreOutlined />, path: "/allsourcing" },
+    { key: "supplier-quotes", label: "Supplier Quotes", icon: <AppstoreAddOutlined />, path: "/allquotes" },
+    { key: "suppliers", label: "Suppliers (Verify)", icon: <SafetyOutlined />, path: "/allsuppliers" },
+    { key: "shipments", label: "Shipments", icon: <TruckOutlined />, path: "/allshipments" },
+    { key: "inspections", label: "Inspections", icon: <SafetyOutlined />, path: "/allinspections" },
+    { key: "business-trips", label: "Business Trips&visa", icon: <TruckOutlined />, path: "/alltrips" },
+    // { key: "visa-invitations", label: "Visa Invitations", icon: <CustomerServiceOutlined />, path: "/allvisa" },
+    { key: "payments", label: "Payments", icon: <DollarCircleOutlined />, path: "/allpayments" },
+    { key: "support-tickets", label: "Support Tickets", icon: <CustomerServiceOutlined />, path: "/all-support-tickets" },
+    { key: "export-products", label: "Export Products", icon: <AppstoreAddOutlined />, path: "/all-port-Products" },
+    { key: "blog", label: "Blog & News", icon: <FileTextOutlined />, path: "/allblogs" },
+    { key: "testimonials", label: "Testimonials", icon: <FileTextOutlined />, path: "/alltestimonials" },
+    { key: "users", label: "Users (All Roles)", icon: <UserOutlined />, path: "/allusers" },
+    { key: "staff-management", label: "Staff Management", icon: <UserOutlined />, path: "/staff-management" },
+    { key: "settings", label: "Settings", icon: <CustomerServiceOutlined />, path: "/settings" },
+    { key: "logout", label: "Logout", icon: <AppstoreOutlined />, path: "/" },
   ],
 };
 
 const Sidebar: React.FC<SidebarProps> = ({ role }) => {
-  const [selectedKey, setSelectedKey] = useState<string>('dashboard');
+  const [selectedKey, setSelectedKey] = useState<string>("dashboard");
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const toggleSidebar = () => setCollapsed(!collapsed);
 
-  const renderMenuItem = (item: MenuItem, depth = 0) => {
-    const isSelected = selectedKey === item.key;
-
-    return (
-      <div key={item.key}>
-        <button
-          onClick={() => {
-            setSelectedKey(item.key);
-            if (item.path) navigate(item.path);
-          }}
-          className={`
-            flex items-center w-full py-2 px-4 rounded-lg transition-all
-            ${isSelected ? 'font-semibold bg-white/20' : ''}
-            cursor-pointer
-          `}
-          style={{ paddingLeft: `${16 + depth * 16}px` }}
-        >
-          <span className="mr-3 text-lg">{item.icon}</span>
-          {!collapsed && <span className="truncate">{item.label}</span>}
-        </button>
-        {item.children?.map((child) => renderMenuItem(child, depth + 1))}
-      </div>
-    );
-  };
+  const renderMenuItem = (item: MenuItem, depth = 0) => (
+    <div key={item.key}>
+      <button
+        onClick={() => {
+          setSelectedKey(item.key);
+          if (item.path) navigate(item.path);
+        }}
+        className={`flex items-center w-full py-2 px-4 rounded-lg transition-all cursor-pointer ${
+          selectedKey === item.key ? "font-semibold bg-white/20" : ""
+        }`}
+        style={{ paddingLeft: `${16 + depth * 16}px` }}
+      >
+        <span className="mr-3 text-lg">{item.icon}</span>
+        {!collapsed && <span className="truncate">{item.label}</span>}
+      </button>
+      {item.children?.map((child) => renderMenuItem(child, depth + 1))}
+    </div>
+  );
 
   return (
     <aside
       className="flex flex-col bg-[#0F3952] text-white transition-all duration-300"
-      style={{ width: collapsed ? '80px' : '250px', height: '100vh' }}
+      style={{ width: collapsed ? "80px" : "250px", height: "100vh" }}
     >
       {/* Logo */}
       <div className="flex items-center justify-start py-4 px-4 border-b border-gray-700 select-none cursor-default gap-2">
         <img
           src={yostiLogo}
           alt="Yosti Logo"
-          className={`${collapsed ? 'h-6' : 'h-12'} transition-all`}
+          className={`${collapsed ? "h-6" : "h-12"} transition-all`}
         />
         {!collapsed && (
           <span className="text-xl font-bold">
             <span className="text-white">Y</span>
-            <span style={{ color: '#E4BD3B' }}>osti</span>
+            <span style={{ color: "#E4BD3B" }}>osti</span>
           </span>
         )}
       </div>
 
-      {/* Scrollable Menu with hidden scrollbar */}
-      <div
-        className="flex-1 overflow-y-auto px-1 mt-1"
-        style={{ scrollbarWidth: 'none' }}
-      >
+      {/* Menu */}
+      <div className="flex-1 overflow-y-auto px-1 mt-1" style={{ scrollbarWidth: "none" }}>
         {menuItemsByRole[role]?.map((item) => renderMenuItem(item))}
       </div>
 
-      {/* Collapse Button at bottom */}
+      {/* Collapse Button */}
       <div className="border-t border-gray-700 p-2 flex justify-center">
         <button onClick={toggleSidebar} className="text-white text-lg focus:outline-none">
           {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         </button>
       </div>
 
-      {/* Hide scrollbar for Webkit */}
       <style>{`
         div::-webkit-scrollbar {
           width: 0px;

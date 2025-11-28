@@ -1,105 +1,85 @@
-import React from "react";
-import { Rate, Carousel } from "antd";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
+import { Rate } from "antd";
 
 const testimonials = [
   {
-    name: "Abel K.",
-    country: "🇪🇹",
+    name: "Dawit G.",
+    country: "Ethiopia",
     rating: 5,
-    text: "Yosti made my first import from China smooth and transparent.",
-    image: "https://randomuser.me/api/portraits/men/32.jpg",
+    text: "Yosti helped me source high-quality machinery at a much better price than I expected. They handled everything, including the visa, hotel, and factory tour. I highly recommend their team!",
   },
   {
-    name: "Li Wei",
-    country: "🇨🇳",
+    name: "Samuel K.",
+    country: "South Sudan",
     rating: 5,
-    text: "Excellent service and reliable supplier verification!",
-    image: "https://randomuser.me/api/portraits/men/45.jpg",
+    text: "Thanks to Yosti’s business trip planning, I visited reliable suppliers in Yiwu and finalized deals quickly. They even provided a translator and helped me negotiate lower prices.",
   },
   {
-    name: "Grace M.",
-    country: "🇺🇬",
-    rating: 4,
-    text: "Fast logistics support and very helpful customer care.",
-    image: "https://randomuser.me/api/portraits/women/65.jpg",
-  },
-  {
-    name: "Samuel T.",
-    country: "🇸🇸",
+    name: "Mulu B.",
+    country: "Ethiopia",
     rating: 5,
-    text: "Professional and responsive service for international trade.",
-    image: "https://randomuser.me/api/portraits/men/22.jpg",
-  },
-  {
-    name: "Mei L.",
-    country: "🇨🇳",
-    rating: 4,
-    text: "Smooth process and great supplier network.",
-    image: "https://randomuser.me/api/portraits/women/12.jpg",
+    text: "I’ve used other sourcing agents before, but Yosti is the only one that provided full transparency, video inspections, and timely updates. Their logistics support was also excellent.",
   },
 ];
 
-const TestimonialsSection: React.FC = () => {
-  const carouselRef = React.useRef<any>(null);
+const InfiniteTestimonials: React.FC = () => {
+  const [isPaused, setIsPaused] = useState(false);
 
   return (
-    <section className="py-16 bg-gray-50" id="testimonials">
-      <div className="container mx-auto px-6 md:px-12 relative">
-        <h2 className="text-3xl md:text-4xl text-black text-center mb-10 font-medium">
-          What Our Clients Say
+    <section className="py-16 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 relative">
+        <h2 className="text-3xl md:text-4xl text-center mb-12 font-bold">
+          What Our <span className="text-[#0F3952]">Clients</span> Say?
         </h2>
 
-        {/* Left Arrow */}
-        <button
-          onClick={() => carouselRef.current.prev()}
-          className="absolute left-0 top-1/2 transform   -translate-y-1/2 z-30 text-blue-500 text-2xl bg-white rounded-full p-3 shadow-lg hover:bg-gray-100"
+        <div
+          className="overflow-hidden"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onTouchStart={() => setIsPaused(true)}
+          onTouchEnd={() => setIsPaused(false)}
         >
-          <LeftOutlined />
-        </button>
-
-        {/* Right Arrow */}
-        <button
-          onClick={() => carouselRef.current.next()}
-          className="absolute right-0 top-1/2 transform  -translate-y-1/2 z-30 text-blue-500 text-2xl bg-white rounded-full p-3 shadow-lg hover:bg-gray-100"
-        >
-          <RightOutlined />
-        </button>
-
-        <Carousel
-          ref={carouselRef}
-          slidesToShow={3}
-          slidesToScroll={1}
-          infinite
-          dots={false}
-          className="overflow-visible"
-          responsive={[
-            { breakpoint: 1024, settings: { slidesToShow: 2 } },
-            { breakpoint: 768, settings: { slidesToShow: 1 } },
-          ]}
-        >
-          {testimonials.map((t, index) => (
-            <div key={index} className="px-14 flex justify-center">
-              <div className="flex flex-col items-center text-center transition-transform transform hover:scale-105">
-                <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-blue-500 mb-4">
-                  <img
-                    src={t.image}
-                    alt={t.name}
-                    className="w-full h-full object-cover"
-                  />
+          <div
+            className={`flex gap-8 ${isPaused ? "paused" : "animate-scroll"}`}
+          >
+            {[...testimonials, ...testimonials].map((t, idx) => (
+              <div
+                key={idx}
+                className="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg p-6 text-[#0F3952] hover:scale-105 transition-transform"
+              >
+                <div className="flex items-center mb-4">
+                  <Rate disabled defaultValue={t.rating} className="text-yellow-400" />
                 </div>
-                <p className="text-gray-700 italic mb-4">{`"${t.text}"`}</p>
-                <Rate disabled defaultValue={t.rating} className="mb-2" />
-                <p className="text-black">
-                  {t.name}, {t.country}
-                </p>
+                <p className="text-sm mb-4">{`"${t.text}"`}</p>
+                <p className="font-semibold text-yellow-400">{t.name}, {t.country}</p>
               </div>
-            </div>
-          ))}
-        </Carousel>
+            ))}
+          </div>
+        </div>
       </div>
+
+      <style jsx>{`
+        .animate-scroll {
+          display: flex;
+          gap: 2rem;
+          animation: scroll 20s linear infinite;
+        }
+        .paused {
+          display: flex;
+          gap: 2rem;
+          animation-play-state: paused;
+        }
+        @keyframes scroll {
+          0% {
+            transform: translateX(0%);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+      `}</style>
     </section>
   );
 };
 
-export default TestimonialsSection;
+export default InfiniteTestimonials;

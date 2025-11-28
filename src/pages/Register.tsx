@@ -1,95 +1,130 @@
+// src/pages/Register.tsx
 import React, { useState } from "react";
-import { Form, Input, Button, Select, message } from "antd";
+import { Form, Input, Button, Select } from "antd";
 import { Link } from "react-router-dom";
-import AuthLayout from "../components/BackgroundLayout"; // make sure the path is correct
+import AuthLayout from "../components/BackgroundLayout";
 
 const { Option } = Select;
 
 const Register: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
-  const onFinish = async (values: any) => {
+  const handleSubmit = (values: any) => {
     setLoading(true);
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      message.success("Registration successful!");
-      console.log("Registered values:", values);
-    } catch (error) {
-      message.error("Registration failed");
-    } finally {
-      setLoading(false);
-    }
+    console.log("Form Values:", values);
+    // Here you can handle the form locally or pass it to a parent component
+    setTimeout(() => setLoading(false), 1000); // Simulate loading
   };
 
   return (
     <AuthLayout>
-      <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-md">
-        <h2 className="text-3xl font-bold mb-6 text-center text-[#002b5b]">
-          Register
+      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+        {/* Title */}
+        <h2 className="text-3xl font-extrabold text-center mb-6" style={{ color: "#0F3952" }}>
+          Create Your Account
         </h2>
 
-        <Form layout="vertical" onFinish={onFinish}>
-          <Form.Item name="full_name" label="Full Name" rules={[{ required: true }]}>
-            <Input placeholder="John Doe" />
+        {/* Form */}
+        <Form layout="vertical" onFinish={handleSubmit} requiredMark={false}>
+          <Form.Item
+            name="full_name"
+            label="Full Name"
+            rules={[{ required: true, message: "Full name is required" }]}
+          >
+            <Input placeholder="John Doe" size="large" />
           </Form.Item>
 
-          <Form.Item name="company_name" label="Company Name">
-            <Input placeholder="Optional for individuals" />
+          <Form.Item name="company_name" label="Company Name (optional)">
+            <Input placeholder="Optional if you're an individual" size="large" />
           </Form.Item>
 
-          <Form.Item name="country" label="Country" rules={[{ required: true }]}>
-            <Select placeholder="Select your country">
+          <Form.Item
+            name="country"
+            label="Country"
+            rules={[{ required: true, message: "Please select a country" }]}
+          >
+            <Select placeholder="Choose your country" size="large">
               <Option value="Ethiopia">Ethiopia</Option>
               <Option value="China">China</Option>
               <Option value="Uganda">Uganda</Option>
             </Select>
           </Form.Item>
 
-          <Form.Item name="phone" label="Phone" rules={[{ required: true }]}>
-            <Input placeholder="+251 9xxxxxxx" />
+          <Form.Item
+            name="phone"
+            label="Phone"
+            rules={[{ required: true, message: "Phone number is required" }]}
+          >
+            <Input placeholder="+251 9xxxxxxx" size="large" />
           </Form.Item>
 
-          <Form.Item name="email" label="Email" rules={[{ required: true, type: "email" }]}>
-            <Input placeholder="example@email.com" />
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[
+              { required: true, message: "Email is required" },
+              { type: "email", message: "Enter a valid email" },
+            ]}
+          >
+            <Input placeholder="example@email.com" size="large" />
           </Form.Item>
 
-          <Form.Item name="password" label="Password" rules={[{ required: true, min: 6 }]}>
-            <Input.Password />
+          <Form.Item
+            name="password"
+            label="Password"
+            rules={[{ required: true, message: "Password is required" }, { min: 6 }]}
+          >
+            <Input.Password size="large" />
           </Form.Item>
 
-          <Form.Item name="account_type" label="Account Type" rules={[{ required: true }]}>
-            <Select placeholder="Select account type">
+          <Form.Item
+            name="account_type"
+            label="Account Type"
+            rules={[{ required: true, message: "Select an account type" }]}
+          >
+            <Select placeholder="Choose user role" size="large">
               <Option value="individual">Individual</Option>
-              <Option value="business">Business</Option>
+              <Option value="business">Business / Buyer</Option>
               <Option value="supplier">Supplier</Option>
               <Option value="logistics">Logistics</Option>
+              <Option value="admin">Admin</Option>
             </Select>
           </Form.Item>
 
-          <Form.Item name="language_preference" label="Language Preference" rules={[{ required: true }]}>
-            <Select>
+          <Form.Item
+            name="language_preference"
+            label="Language Preference"
+            rules={[{ required: true, message: "Choose a language" }]}
+          >
+            <Select size="large">
               <Option value="en">English</Option>
               <Option value="am">Amharic</Option>
             </Select>
           </Form.Item>
 
+          {/* Button */}
           <Form.Item>
             <Button
               type="primary"
               htmlType="submit"
               loading={loading}
+              size="large"
               block
-              className="bg-[#002b5b] border-none"
+              style={{
+                backgroundColor: "#0F3952",
+                borderColor: "#0F3952",
+                borderRadius: "10px",
+              }}
             >
               Register
             </Button>
           </Form.Item>
         </Form>
 
-        <p className="text-center text-black mt-4">
+        {/* Footer */}
+        <p className="text-center mt-4 text-gray-700">
           Already have an account?{" "}
-          <Link to="/login" className="text-[#002b5b] font-semibold hover:underline">
+          <Link to="/login" style={{ color: "#0F3952" }} className="font-semibold hover:underline">
             Login
           </Link>
         </p>
