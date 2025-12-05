@@ -1,104 +1,49 @@
 // src/pages/buyer/MyShipments.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { Table, Drawer, Button, Form, Input, InputNumber, Select } from "antd";
 import { EnvironmentOutlined, PlusOutlined } from "@ant-design/icons";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import dayjs from "dayjs";
 import "leaflet/dist/leaflet.css";
+import dayjs from "dayjs";
+
+import type { Shipment, ShipmentStatus } from "../../pages/buyer/type/ShipmentsInterface";
+import { useShipments, type BookShipmentForm } from "../../hooks/useShipments";
 
 const { Option } = Select;
 
-interface ShipmentUpdate {
-  update_id: string;
-  shipment_id: string;
-  location: string;
-  status: "booked" | "in transit" | "at port" | "customs" | "delivered";
-  remarks: string;
-  update_time: string;
-}
-
-interface Shipment {
-  shipment_id: string;
-  user_id: string;
-  pickup_location: string;
-  destination_country: string;
-  destination_city: string;
-  goods_description: string;
-  weight: number;
-  volume: number;
-  shipping_method: "sea" | "air" | "express";
-  tracking_number: string;
-  status: "booked" | "in transit" | "at port" | "customs" | "delivered";
-  estimated_delivery: string;
-  updates: ShipmentUpdate[];
-}
-
-const initialShipments: Shipment[] = [
-  {
-    shipment_id: "SHP-001",
-    user_id: "USR-001",
-    pickup_location: "Guangzhou Warehouse",
-    destination_country: "Ethiopia",
-    destination_city: "Addis Ababa",
-    goods_description: "Bluetooth Speakers",
-    weight: 120,
-    volume: 3.5,
-    shipping_method: "air",
-    tracking_number: "TRK-99231A",
-    status: "in transit",
-    estimated_delivery: "2025-12-01",
-    updates: [
-      {
-        update_id: "UPD-001",
-        shipment_id: "SHP-001",
-        location: "Guangzhou Warehouse",
-        status: "booked",
-        remarks: "Shipment booked",
-        update_time: "2025-11-01 10:00",
-      },
-      {
-        update_id: "UPD-002",
-        shipment_id: "SHP-001",
-        location: "Guangzhou Airport",
-        status: "in transit",
-        remarks: "Shipment departed",
-        update_time: "2025-11-03 14:30",
-      },
-    ],
-  },
-];
-
 export default function MyShipments() {
-  const [shipments, setShipments] = useState<Shipment[]>(initialShipments);
+  const { shipments, addShipment } = useShipments();
   const [openBook, setOpenBook] = useState(false);
   const [openTrack, setOpenTrack] = useState(false);
   const [selectedShipment, setSelectedShipment] = useState<Shipment | null>(null);
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<BookShipmentForm>();
+
+  const timelineSteps: ShipmentStatus[] = ["booked", "in transit", "at port", "customs", "delivered"];
+  const getUpdateTime = (shipment: Shipment, step: ShipmentStatus) => {
+    const upd = shipment.updates.find((u) => u.status === step);
+    return upd ? dayjs(upd.update_time).format("YYYY-MM-DD HH:mm") : "-";
+  };
+
+  const handleBook = (values: BookShipmentForm) => {
+    addShipment(values);
+    form.resetFields();
+    setOpenBook(false);
+  };
 
   const columns = [
-    {
-      title: "Tracking No.",
-      dataIndex: "tracking_number",
-      key: "tracking_number",
-      render: (text: string) => <span className="font-semibold text-gray-900">{text}</span>,
-    },
-    { title: "Destination", render: (r: Shipment) => `${r.destination_city}, ${r.destination_country}` },
+    { title: "Tracking No.", dataIndex: "tracking_number", key: "tracking_number", render: (text: string) => <span className="font-semibold">{text}</span> },
+    { title: "Destination", key: "destination", render: (_: unknown, record: Shipment) => `${record.destination_city}, ${record.destination_country}` },
     { title: "Method", dataIndex: "shipping_method", key: "shipping_method" },
     { title: "Status", dataIndex: "status", key: "status" },
+    { title: "Est. Delivery", dataIndex: "estimated_delivery", key: "estimated_delivery", render: (date: string) => dayjs(date).format("YYYY-MM-DD") },
     {
-      title: "Est. Delivery",
-      dataIndex: "estimated_delivery",
-      key: "estimated_delivery",
-      render: (d: string) => dayjs(d).format("YYYY-MM-DD"),
-    },
-    {
-      title: "Actions",
-      key: "actions",
-      render: (_: any, record: Shipment) => (
+      title: "Track",
+      key: "track",
+      render: (_: unknown, record: Shipment) => (
         <Button
           icon={<EnvironmentOutlined />}
-          style={{ backgroundColor: "#0f3952", color: "white", border: "none" }}
           size="small"
+          className="bg-[#0F3952] text-white border-none flex items-center gap-1"
           onClick={() => {
             setSelectedShipment(record);
             setOpenTrack(true);
@@ -110,78 +55,31 @@ export default function MyShipments() {
     },
   ];
 
-  const handleBook = (values: any) => {
-    const newShipment: Shipment = {
-      shipment_id: `SHP-${Math.floor(Math.random() * 999).toString().padStart(3, "0")}`,
-      user_id: "USR-001",
-      pickup_location: values.pickup_location,
-      destination_country: values.destination_country,
-      destination_city: values.destination_city,
-      goods_description: values.goods_description,
-      weight: values.weight,
-      volume: values.volume,
-      shipping_method: values.shipping_method,
-      tracking_number: "TRK-" + Math.random().toString(36).substr(2, 6).toUpperCase(),
-      status: "booked",
-      estimated_delivery: dayjs().add(15, "day").format("YYYY-MM-DD"),
-      updates: [
-        {
-          update_id: `UPD-${Math.floor(Math.random() * 999)}`,
-          shipment_id: `SHP-${Math.floor(Math.random() * 999)}`,
-          location: values.pickup_location,
-          status: "booked",
-          remarks: "Shipment booked",
-          update_time: dayjs().format("YYYY-MM-DD HH:mm"),
-        },
-      ],
-    };
-    setShipments([newShipment, ...shipments]);
-    form.resetFields();
-    setOpenBook(false);
-  };
-
-  const timelineSteps: ShipmentUpdate["status"][] = [
-    "booked",
-    "in transit",
-    "at port",
-    "customs",
-    "delivered",
-  ];
-
-  const getUpdateTime = (shipment: Shipment, step: ShipmentUpdate["status"]) => {
-    const upd = shipment.updates.find((u) => u.status === step);
-    return upd ? dayjs(upd.update_time).format("YYYY-MM-DD HH:mm") : "-";
-  };
-
   return (
-    <div className="p-6 bg-white min-h-screen">
-      {/* HEADER */}
+    <div className="p-6 min-h-screen bg-white">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-900">My Shipments</h1>
         <Button
           icon={<PlusOutlined />}
-          style={{ backgroundColor: "#0f3952", color: "white", border: "none" }}
+          className="bg-[#0F3952] text-white border-none flex items-center gap-1"
           onClick={() => setOpenBook(true)}
         >
           Book Shipment
         </Button>
       </div>
 
-      {/* TABLE */}
-      <Table
-        dataSource={shipments}
-        columns={columns}
-        rowKey="shipment_id"
-        pagination={{ position: ["bottomRight"], pageSize: 5 }}
-      />
+      <div className="overflow-x-auto rounded-xl border border-gray-200">
+        <Table<Shipment>
+          dataSource={shipments}
+          columns={columns}
+          rowKey="shipment_id"
+          pagination={{ pageSize: 5, position: ["bottomRight"] }}
+          bordered
+        />
+      </div>
 
-      {/* BOOKING DRAWER */}
-      <Drawer
-        title="Book New Shipment"
-        open={openBook}
-        width={400}
-        onClose={() => setOpenBook(false)}
-      >
+      {/* BOOK DRAWER */}
+      <Drawer title="Book New Shipment" open={openBook} width={400} onClose={() => setOpenBook(false)}>
         <Form layout="vertical" form={form} onFinish={handleBook}>
           <Form.Item label="Pickup Location" name="pickup_location" rules={[{ required: true }]}>
             <Input />
@@ -208,54 +106,35 @@ export default function MyShipments() {
               <Option value="express">Express</Option>
             </Select>
           </Form.Item>
-          <Button
-            htmlType="submit"
-            className="w-full"
-            style={{ backgroundColor: "#0f3952", color: "white", border: "none" }}
-          >
+          <Button htmlType="submit" className="w-full bg-[#0F3952] text-white border-none">
             Confirm Booking
           </Button>
         </Form>
       </Drawer>
 
       {/* TRACKING DRAWER */}
-      <Drawer
-        title="Live Shipment Tracking"
-        open={openTrack}
-        width={450}
-        onClose={() => setOpenTrack(false)}
-      >
+      <Drawer title="Live Shipment Tracking" open={openTrack} width={450} onClose={() => setOpenTrack(false)}>
         {selectedShipment && (
           <div className="space-y-4">
-            {/* STATUS TIMELINE */}
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-2">Status Timeline</h3>
-              <ul className="space-y-2">
-                {timelineSteps.map((step) => (
+            <h3 className="font-semibold text-gray-900 mb-2">Status Timeline</h3>
+            <ul className="space-y-2">
+              {timelineSteps.map((step) => {
+                const upd = selectedShipment.updates.find((u) => u.status === step);
+                return (
                   <li key={step} className="p-2 rounded border border-gray-300">
                     <div className="flex justify-between">
                       <span className="font-medium">{step.toUpperCase()}</span>
                       <span className="text-sm">{getUpdateTime(selectedShipment, step)}</span>
                     </div>
-                    <div className="text-gray-700">
-                      {selectedShipment.updates.find((u) => u.status === step)?.location || ""}
-                      {selectedShipment.updates.find((u) => u.status === step)?.remarks
-                        ? " — " + selectedShipment.updates.find((u) => u.status === step)?.remarks
-                        : ""}
-                    </div>
+                    <div className="text-gray-700">{upd ? `${upd.location} — ${upd.remarks}` : ""}</div>
                   </li>
-                ))}
-              </ul>
-            </div>
+                );
+              })}
+            </ul>
 
-            {/* MAP VIEW */}
             <h3 className="font-semibold text-gray-900">Live Map</h3>
             <div className="h-64 rounded overflow-hidden">
-              <MapContainer
-                center={[30.6, 104.0]} // Example coordinates
-                zoom={5}
-                style={{ height: "100%", width: "100%" }}
-              >
+              <MapContainer center={[30.6, 104.0]} zoom={5} style={{ height: "100%", width: "100%" }}>
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                 <Marker position={[30.6, 104.0]}>
                   <Popup>Shipment is in transit</Popup>

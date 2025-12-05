@@ -1,26 +1,51 @@
-// src/context/RoleContext.tsx
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Role } from '../components/Sidebar';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+} from "react";
 
+// --------------------------------------
+// Role Type
+// --------------------------------------
+export type Role = "admin" | "finance" | "logistics" | "inspector";
+
+// --------------------------------------
+// Context Shape
+// --------------------------------------
 interface RoleContextType {
   role: Role;
-  setRole: (role: Role) => void;
+  setRole: (value: Role) => void;
 }
 
+// --------------------------------------
+// Create Context
+// --------------------------------------
 const RoleContext = createContext<RoleContextType | undefined>(undefined);
 
+// --------------------------------------
+// Custom Hook
+// --------------------------------------
 export const useRole = () => {
-  const context = useContext(RoleContext);
-  if (!context) throw new Error('useRole must be used within RoleProvider');
-  return context;
+  const ctx = useContext(RoleContext);
+  if (!ctx) {
+    throw new Error("useRole must be used inside <RoleProvider>");
+  }
+  return ctx;
 };
 
-interface RoleProviderProps {
+// --------------------------------------
+// Provider
+// --------------------------------------
+interface ProviderProps {
   children: ReactNode;
   initialRole?: Role;
 }
 
-export const RoleProvider: React.FC<RoleProviderProps> = ({ children, initialRole = 'admin' }) => {
+export const RoleProvider: React.FC<ProviderProps> = ({
+  children,
+  initialRole = "admin",
+}) => {
   const [role, setRole] = useState<Role>(initialRole);
 
   return (

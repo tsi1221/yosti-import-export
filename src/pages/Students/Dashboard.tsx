@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Card,
   Button,
@@ -61,6 +61,7 @@ export default function StudentDashboard() {
     setRequestText("");
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleTrainingClick = (item: any) => {
     if (item.type === "PDF") {
       window.open(item.link, "_blank"); // open PDF in new tab

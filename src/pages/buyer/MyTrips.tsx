@@ -1,85 +1,13 @@
-// src/pages/buyer/MyTrips.tsx
 import React, { useState } from "react";
-import { Table, Tag, Button, Tabs, Drawer, Form, Input, DatePicker, InputNumber, Switch, message } from "antd";
+import { Table, Tag, Button, Tabs, Drawer, Form, Input, DatePicker, InputNumber, Checkbox } from "antd";
 import dayjs from "dayjs";
+import { useTrips } from "../../hooks/useTrips";
+import type { BusinessTrip, VisaInvitation } from "./type/TripsInterface";
 
 const { TabPane } = Tabs;
 
-interface BusinessTrip {
-  trip_id: string;
-  user_id: string;
-  arrival_city: string;
-  arrival_date: string;
-  duration_days: number;
-  hotel_booking: boolean;
-  transport: boolean;
-  translator: boolean;
-  status: "planned" | "ongoing" | "completed";
-}
-
-interface VisaInvitation {
-  visa_id: string;
-  user_id: string;
-  passport_number: string;
-  nationality: string;
-  planned_arrival_date: string;
-  duration_days: number;
-  purpose: string;
-  status: "pending" | "approved" | "rejected";
-}
-
-const initialBusinessTrips: BusinessTrip[] = [
-  {
-    trip_id: "TRP-001",
-    user_id: "USR-001",
-    arrival_city: "Addis Ababa",
-    arrival_date: "2025-12-10",
-    duration_days: 5,
-    hotel_booking: true,
-    transport: true,
-    translator: false,
-    status: "planned",
-  },
-  {
-    trip_id: "TRP-002",
-    user_id: "USR-001",
-    arrival_city: "Nairobi",
-    arrival_date: "2025-11-20",
-    duration_days: 3,
-    hotel_booking: false,
-    transport: true,
-    translator: true,
-    status: "ongoing",
-  },
-];
-
-const initialVisaInvitations: VisaInvitation[] = [
-  {
-    visa_id: "VISA-001",
-    user_id: "USR-001",
-    passport_number: "P123456789",
-    nationality: "Ethiopian",
-    planned_arrival_date: "2025-12-10",
-    duration_days: 5,
-    purpose: "Business Meeting",
-    status: "pending",
-  },
-  {
-    visa_id: "VISA-002",
-    user_id: "USR-001",
-    passport_number: "P987654321",
-    nationality: "Ethiopian",
-    planned_arrival_date: "2025-11-20",
-    duration_days: 3,
-    purpose: "Conference",
-    status: "approved",
-  },
-];
-
 export default function MyTrips() {
-  const [businessTrips, setBusinessTrips] = useState<BusinessTrip[]>(initialBusinessTrips);
-  const [visaInvitations, setVisaInvitations] = useState<VisaInvitation[]>(initialVisaInvitations);
-
+  const { businessTrips, visaInvitations, addBusinessTrip, addVisaInvitation } = useTrips();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerType, setDrawerType] = useState<"trip" | "visa">("trip");
   const [form] = Form.useForm();
@@ -94,34 +22,24 @@ export default function MyTrips() {
     form.resetFields();
   };
 
-  const handleAddEntry = (values: any) => {
+  const handleAddEntry = (values: BusinessTrip) => {
     if (drawerType === "trip") {
-      const newTrip: BusinessTrip = {
-        trip_id: `TRP-${businessTrips.length + 1}`.padStart(6, "0"),
-        user_id: "USR-001",
+      addBusinessTrip({
         arrival_city: values.arrival_city,
         arrival_date: values.arrival_date.format("YYYY-MM-DD"),
         duration_days: values.duration_days,
-        hotel_booking: values.hotel_booking,
-        transport: values.transport,
-        translator: values.translator,
-        status: "planned",
-      };
-      setBusinessTrips([newTrip, ...businessTrips]);
-      message.success("Business Trip requested successfully!");
+        hotel_booking: values.hotel_booking || false,
+        transport: values.transport || false,
+        translator: values.translator || false,
+      });
     } else {
-      const newVisa: VisaInvitation = {
-        visa_id: `VISA-${visaInvitations.length + 1}`.padStart(6, "0"),
-        user_id: "USR-001",
+      addVisaInvitation({
         passport_number: values.passport_number,
         nationality: values.nationality,
         planned_arrival_date: values.planned_arrival_date.format("YYYY-MM-DD"),
         duration_days: values.duration_days,
         purpose: values.purpose,
-        status: "pending",
-      };
-      setVisaInvitations([newVisa, ...visaInvitations]);
-      message.success("Visa Invitation requested successfully!");
+      });
     }
     closeDrawer();
   };
@@ -140,19 +58,19 @@ export default function MyTrips() {
       title: "Hotel",
       dataIndex: "hotel_booking",
       key: "hotel_booking",
-      render: (val: boolean) => (val ? "Yes" : "No"),
+      render: (val: boolean) => <Checkbox checked={val} disabled />,
     },
     {
       title: "Transport",
       dataIndex: "transport",
       key: "transport",
-      render: (val: boolean) => (val ? "Yes" : "No"),
+      render: (val: boolean) => <Checkbox checked={val} disabled />,
     },
     {
       title: "Translator",
       dataIndex: "translator",
       key: "translator",
-      render: (val: boolean) => (val ? "Yes" : "No"),
+      render: (val: boolean) => <Checkbox checked={val} disabled />,
     },
     {
       title: "Status",
@@ -220,7 +138,6 @@ export default function MyTrips() {
             pagination={{ position: ["bottomRight"], pageSize: 5 }}
           />
         </TabPane>
-
         <TabPane tab="Visa Invitations" key="visa">
           <Table
             dataSource={visaInvitations}
@@ -250,14 +167,14 @@ export default function MyTrips() {
               <Form.Item name="duration_days" label="Duration (days)" rules={[{ required: true }]}>
                 <InputNumber style={{ width: "100%" }} min={1} />
               </Form.Item>
-              <Form.Item name="hotel_booking" label="Hotel Booking" valuePropName="checked">
-                <Switch />
+              <Form.Item name="hotel_booking" valuePropName="checked">
+                <Checkbox>Hotel Booking</Checkbox>
               </Form.Item>
-              <Form.Item name="transport" label="Transport" valuePropName="checked">
-                <Switch />
+              <Form.Item name="transport" valuePropName="checked">
+                <Checkbox>Transport</Checkbox>
               </Form.Item>
-              <Form.Item name="translator" label="Translator" valuePropName="checked">
-                <Switch />
+              <Form.Item name="translator" valuePropName="checked">
+                <Checkbox>Translator</Checkbox>
               </Form.Item>
             </>
           ) : (

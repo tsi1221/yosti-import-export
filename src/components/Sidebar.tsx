@@ -31,12 +31,11 @@ interface SidebarProps {
 interface MenuItem {
   key: string;
   label: string;
-  icon: JSX.Element;
+  icon: React.ReactNode;
   path?: string;
   children?: MenuItem[];
 }
 
-// Menu items per role with unique dashboard paths
 const menuItemsByRole: Record<Role, MenuItem[]> = {
   buyer: [
     { key: "dashboard", label: "Dashboard", icon: <DashboardOutlined />, path: "/buyer/dashboard" },
@@ -54,11 +53,10 @@ const menuItemsByRole: Record<Role, MenuItem[]> = {
   ],
   supplier: [
     { key: "dashboard", label: "Dashboard", icon: <DashboardOutlined />, path: "/supplier/dashboard" },
-    // { key: "open-requests", label: "Open Requests", icon: <AppstoreOutlined />, path: "/open-requests" },
     { key: "my-quotes", label: "Quotes", icon: <AppstoreAddOutlined />, path: "/my-quotes" },
     { key: "my-inspections", label: "Inspections", icon: <SafetyOutlined />, path: "/my-inspections" },
     { key: "profile", label: "Profile", icon: <UserOutlined />, path: "/SupplierProfile" },
-    { key: "verification-status", label: "Verification ", icon: <CustomerServiceOutlined />, path: "/verification-status" },
+    { key: "verification-status", label: "Verification", icon: <CustomerServiceOutlined />, path: "/verification-status" },
     { key: "logout", label: "Logout", icon: <AppstoreOutlined />, path: "/" },
   ],
   student: [
@@ -77,7 +75,7 @@ const menuItemsByRole: Record<Role, MenuItem[]> = {
   ],
   admin: [
     { key: "dashboard", label: "Dashboard", icon: <DashboardOutlined />, path: "/admin/dashboard" },
-    { key: "blogs", label: "Blog&testmony", icon: <AppstoreAddOutlined />, path: "/blogs" },
+    { key: "blogs", label: "Blog & Testimony", icon: <AppstoreAddOutlined />, path: "/blogs" },
     { key: "sourcing", label: "Sourcing", icon: <AppstoreOutlined />, path: "/sourcing" },
     { key: "support", label: "Support", icon: <CustomerServiceOutlined />, path: "/support" },
     { key: "shipments", label: "Shipments", icon: <TruckOutlined />, path: "/shipments" },
@@ -93,14 +91,13 @@ const menuItemsByRole: Record<Role, MenuItem[]> = {
     { key: "suppliers", label: "Suppliers (Verify)", icon: <SafetyOutlined />, path: "/allsuppliers" },
     { key: "shipments", label: "Shipments", icon: <TruckOutlined />, path: "/allshipments" },
     { key: "inspections", label: "Inspections", icon: <SafetyOutlined />, path: "/allinspections" },
-    { key: "business-trips", label: "Business Trips&visa", icon: <TruckOutlined />, path: "/alltrips" },
-    // { key: "visa-invitations", label: "Visa Invitations", icon: <CustomerServiceOutlined />, path: "/allvisa" },
+    { key: "business-trips", label: "Business Trips & Visa", icon: <TruckOutlined />, path: "/alltrips" },
     { key: "payments", label: "Payments", icon: <DollarCircleOutlined />, path: "/allpayments" },
     { key: "support-tickets", label: "Support Tickets", icon: <CustomerServiceOutlined />, path: "/all-support-tickets" },
     { key: "export-products", label: "Export Products", icon: <AppstoreAddOutlined />, path: "/all-port-Products" },
     { key: "blog", label: "Blog & News", icon: <FileTextOutlined />, path: "/allblogs" },
     { key: "testimonials", label: "Testimonials", icon: <FileTextOutlined />, path: "/alltestimonials" },
-    { key: "users", label: "Users (All Roles)", icon: <UserOutlined />, path: "/allusers" },
+    { key: "users", label: "Users", icon: <UserOutlined />, path: "/allusers" },
     { key: "staff-management", label: "Staff Management", icon: <UserOutlined />, path: "/staff-management" },
     { key: "settings", label: "Settings", icon: <CustomerServiceOutlined />, path: "/settings" },
     { key: "logout", label: "Logout", icon: <AppstoreOutlined />, path: "/" },
@@ -108,11 +105,9 @@ const menuItemsByRole: Record<Role, MenuItem[]> = {
 };
 
 const Sidebar: React.FC<SidebarProps> = ({ role }) => {
-  const [selectedKey, setSelectedKey] = useState<string>("dashboard");
-  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [selectedKey, setSelectedKey] = useState("dashboard");
+  const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
-
-  const toggleSidebar = () => setCollapsed(!collapsed);
 
   const renderMenuItem = (item: MenuItem, depth = 0) => (
     <div key={item.key}>
@@ -129,6 +124,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
         <span className="mr-3 text-lg">{item.icon}</span>
         {!collapsed && <span className="truncate">{item.label}</span>}
       </button>
+
       {item.children?.map((child) => renderMenuItem(child, depth + 1))}
     </div>
   );
@@ -138,13 +134,8 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
       className="flex flex-col bg-[#0F3952] text-white transition-all duration-300"
       style={{ width: collapsed ? "80px" : "250px", height: "100vh" }}
     >
-      {/* Logo */}
-      <div className="flex items-center justify-start py-4 px-4 border-b border-gray-700 select-none cursor-default gap-2">
-        <img
-          src={yostiLogo}
-          alt="Yosti Logo"
-          className={`${collapsed ? "h-6" : "h-12"} transition-all`}
-        />
+      <div className="flex items-center py-4 px-4 border-b border-gray-700 gap-2">
+        <img src={yostiLogo} alt="logo" className={`${collapsed ? "h-6" : "h-12"} transition-all`} />
         {!collapsed && (
           <span className="text-xl font-bold">
             <span className="text-white">Y</span>
@@ -153,14 +144,12 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
         )}
       </div>
 
-      {/* Menu */}
       <div className="flex-1 overflow-y-auto px-1 mt-1" style={{ scrollbarWidth: "none" }}>
         {menuItemsByRole[role]?.map((item) => renderMenuItem(item))}
       </div>
 
-      {/* Collapse Button */}
       <div className="border-t border-gray-700 p-2 flex justify-center">
-        <button onClick={toggleSidebar} className="text-white text-lg focus:outline-none">
+        <button onClick={() => setCollapsed(!collapsed)} className="text-white text-lg">
           {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         </button>
       </div>

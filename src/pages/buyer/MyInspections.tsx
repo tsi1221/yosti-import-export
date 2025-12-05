@@ -1,50 +1,14 @@
-// src/pages/buyer/MyInspections.tsx
-import React, { useState } from "react";
-import { Table, Button, Drawer, Form, Input, Select, DatePicker, Switch } from "antd";
+import { useState } from "react";
+import { Table, Button, Drawer, Form, Input, Select, DatePicker, Checkbox } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+import { useInspections } from "../../hooks/useInspections";
+import {type Inspection } from "./type/InspectionsInterface";
 
 const { Option } = Select;
 
-interface Inspection {
-  inspection_id: string;
-  user_id: string;
-  supplier_id: string;
-  product_type: string;
-  inspection_type: "sample" | "pre-shipment" | "factory visit";
-  date: string;
-  photo_video_required: boolean;
-  report_url?: string;
-  created_at: string;
-}
-
-const initialInspections: Inspection[] = [
-  {
-    inspection_id: "INS-001",
-    user_id: "USR-001",
-    supplier_id: "SUP-001",
-    product_type: "Bluetooth Speaker",
-    inspection_type: "pre-shipment",
-    date: "2025-11-20",
-    photo_video_required: true,
-    report_url: "",
-    created_at: "2025-11-10",
-  },
-  {
-    inspection_id: "INS-002",
-    user_id: "USR-001",
-    supplier_id: "SUP-002",
-    product_type: "Packaging Bags",
-    inspection_type: "sample",
-    date: "2025-11-22",
-    photo_video_required: false,
-    report_url: "",
-    created_at: "2025-11-12",
-  },
-];
-
 export default function MyInspectionsBuyer() {
-  const [inspections, setInspections] = useState<Inspection[]>(initialInspections);
+  const { inspections, addInspection } = useInspections();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [form] = Form.useForm();
 
@@ -55,7 +19,6 @@ export default function MyInspectionsBuyer() {
       key: "inspection_id",
       render: (text: string) => <span className="font-semibold text-gray-900">{text}</span>,
     },
-    { title: "Supplier ID", dataIndex: "supplier_id", key: "supplier_id" },
     { title: "Product Type", dataIndex: "product_type", key: "product_type" },
     { title: "Inspection Type", dataIndex: "inspection_type", key: "inspection_type" },
     {
@@ -66,9 +29,9 @@ export default function MyInspectionsBuyer() {
     },
     {
       title: "Photo/Video Required",
-      dataIndex: "photo_video_required",
+      dataIndex: "photo_video_files",
       key: "photo_video_required",
-      render: (val: boolean) => (val ? "Yes" : "No"),
+      render: (files: string[]) => <Checkbox checked={files.length > 0} disabled />,
     },
     {
       title: "Created At",
@@ -91,19 +54,18 @@ export default function MyInspectionsBuyer() {
     },
   ];
 
-  const handleRequestInspection = (values: any) => {
+  const handleRequestInspection = (values: Inspection ) => {
     const newInspection: Inspection = {
       inspection_id: `INS-${Math.floor(Math.random() * 999).toString().padStart(3, "0")}`,
       user_id: "USR-001",
-      supplier_id: values.supplier_id,
       product_type: values.product_type,
       inspection_type: values.inspection_type,
       date: values.date.format("YYYY-MM-DD"),
-      photo_video_required: values.photo_video_required,
+      photo_video_files: values.photo_video_required ? ["required"] : [],
       report_url: "",
       created_at: dayjs().format("YYYY-MM-DD"),
     };
-    setInspections([newInspection, ...inspections]);
+    addInspection(newInspection);
     form.resetFields();
     setOpenDrawer(false);
   };
@@ -138,9 +100,6 @@ export default function MyInspectionsBuyer() {
         onClose={() => setOpenDrawer(false)}
       >
         <Form layout="vertical" form={form} onFinish={handleRequestInspection}>
-          <Form.Item label="Supplier ID" name="supplier_id" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
           <Form.Item label="Product Type" name="product_type" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
@@ -154,8 +113,8 @@ export default function MyInspectionsBuyer() {
           <Form.Item label="Date" name="date" rules={[{ required: true }]}>
             <DatePicker className="w-full" />
           </Form.Item>
-          <Form.Item label="Photo/Video Required" name="photo_video_required" valuePropName="checked">
-            <Switch />
+          <Form.Item name="photo_video_required" valuePropName="checked">
+            <Checkbox>Photo/Video Required</Checkbox>
           </Form.Item>
           <Button
             htmlType="submit"
