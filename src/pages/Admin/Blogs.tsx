@@ -9,16 +9,15 @@ import {
   Tag,
   Switch,
   Space,
-  Tooltip,
 } from "antd";
 import {
   EyeOutlined,
   EditOutlined,
-  DeleteOutlined,
   SaveOutlined,
   CloseOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
+import type { ColumnsType } from "antd/es/table";
 
 interface BlogPost {
   post_id: string;
@@ -26,9 +25,13 @@ interface BlogPost {
   content: string;
   category: string;
   author_id: string;
+  testimonial_id?:string
+video_url?:string
 }
 
+
 interface Testimonial {
+  post_id?:string
   testimonial_id: string;
   user_id: string;
   review_text: string;
@@ -45,8 +48,8 @@ const Blogs: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [viewMode, setViewMode] = useState(false);
 
-  const [editingBlog, setEditingBlog] = useState<BlogPost | null>(null);
-  const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(
+  const [editingBlog, setEditingBlog] = useState<BlogPost|Testimonial | null>(null);
+  const [editingTestimonial, setEditingTestimonial] = useState<Testimonial|BlogPost | null>(
     null
   );
 
@@ -109,7 +112,7 @@ const Blogs: React.FC = () => {
     ]);
   }, []);
 
-  const openDrawer = (type: "blog" | "testimonial", record: any = null, view = false) => {
+  const openDrawer = (type: "blog" | "testimonial", record: Testimonial|BlogPost|null = null, view = false) => {
     setViewMode(view);
 
     if (type === "blog") {
@@ -175,13 +178,13 @@ const Blogs: React.FC = () => {
     else setTestimonials(prev => prev.filter(p => p.testimonial_id !== id));
   };
 
-  const blogColumns = [
+  const blogColumns:ColumnsType<BlogPost> = [
     { title: "Title", dataIndex: "title" },
     { title: "Category", dataIndex: "category" },
     { title: "Author", dataIndex: "author_id" },
     {
       title: "Action",
-      render: (_: any, record: BlogPost) => (
+      render: (_, record: BlogPost) => (
         <Space>
           <Button
             icon={<EyeOutlined />}
@@ -196,7 +199,7 @@ const Blogs: React.FC = () => {
     },
   ];
 
-  const testimonialColumns = [
+  const testimonialColumns:ColumnsType<Testimonial> = [
     { title: "User ID", dataIndex: "user_id" },
     { title: "Review", dataIndex: "review_text" },
     { title: "Rating", dataIndex: "rating" },
@@ -207,7 +210,7 @@ const Blogs: React.FC = () => {
     },
     {
       title: "Action",
-      render: (_: any, record: Testimonial) => (
+      render: (_, record: Testimonial) => (
         <Space>
           <Button
             icon={<EyeOutlined />}
@@ -259,7 +262,7 @@ const Blogs: React.FC = () => {
             type="primary"
             icon={<PlusOutlined />}
             style={{ background: "#0F3952" }}
-            onClick={() => openDrawer("blog", {})}
+            onClick={() => openDrawer("blog", null)}
           >
             Add Blog
           </Button>
@@ -270,7 +273,7 @@ const Blogs: React.FC = () => {
             type="primary"
             icon={<PlusOutlined />}
             style={{ background: "#0F3952" }}
-            onClick={() => openDrawer("testimonial", {})}
+            onClick={() => openDrawer("testimonial", null)}
           >
             Add Testimony
           </Button>

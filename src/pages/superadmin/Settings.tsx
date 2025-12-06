@@ -1,18 +1,18 @@
 // src/pages/superAdmin/Settings.tsx
-import React, { useState } from "react";
-import { Form, Input, Button, Switch, Card, Row, Col, Upload, message, Space } from "antd";
+import { useState } from "react";
+import { Form, Input, Button, Switch, Card, Row, Col, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
 export default function Settings() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-  const saveSettings = async (values: any) => {
+  const saveSettings = async (values: {platformName:string,adminEmail:string,enableNotifications:boolean,maintenanceMode:boolean}) => {
     setLoading(true);
     try {
       console.log("Saved settings:", values);
       message.success("Settings updated successfully!");
-    } catch (err) {
+    } catch {
       message.error("Failed to save settings");
     } finally {
       setLoading(false);

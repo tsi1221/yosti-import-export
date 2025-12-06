@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { Menu, Button, Skeleton, Drawer } from "antd";
 import { LoginOutlined, MenuOutlined, DownOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
 import type { MenuProps } from "antd";
 import yostiLogo from "../../assets/yostilogo.png";
 
 const Navbar: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const navigate = useNavigate();
-
+type MenuItem = Required<MenuProps>['items'][number];
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1000);
     return () => clearTimeout(timer);
   }, []);
 
-  const menuItems: MenuProps["items"] = [
-    { label: "Home", key: "home", path: "/" },
-    { label: "About Us", key: "about", path: "/about" },
-    { label: "Services", key: "services", path: "/services" },
+  const menuItems: MenuItem[] = [
+    {label: <a href="/">Home</a>, key: "home"},
+    { label: <a href="/about">About Us</a>, key: "about" },
+    { label: <a href="/services">Services</a>, key: "Services" },
+    
     {
       label: (
         <span>
@@ -27,8 +26,8 @@ const Navbar: React.FC = () => {
       ),
       key: "blog",
       children: [
-        { label: "Company News", key: "blog:news", path: "/blog/news" },
-        { label: "Industry Insights", key: "blog:insights", path: "/blog/insights" },
+        { label:<a href="/blog/news">Company News</a>, key: "blog:news"},
+        { label: <a href="/blog/insights">Industry Insights</a>, key: "blog:insights"},
       ],
     },
     {
@@ -39,47 +38,47 @@ const Navbar: React.FC = () => {
       ),
       key: "exports",
       children: [
-        { label: "Coffee", key: "exports:coffee", path: "/exports/coffee" },
-        { label: "Spices", key: "exports:spices", path: "/exports/spices" },
-        { label: "Oil Seeds", key: "exports:oilseeds", path: "/exports/oilseeds" },
+        { label: <a href="/exports/coffee">Coffee</a>, key: "exports:coffee" },
+        { label: <a href="/exports/spices">Spices</a>, key: "exports:spices" },
+        { label: <a href="/exports/oilseeds">Oil Seeds</a>, key: "exports:oilseeds" },
       ],
     },
-    { label: "Testimonials", key: "testimonials", path: "/testimonials" },
-    { label: "Contact", key: "contact", path: "/contact" },
+    { label: <a href="/testimonials">Testimonials</a>, key: "testimonials" },
+    { label: <a href="/contact">Contact</a>, key: "contact" },
   ];
 
-  const handleMenuClick: MenuProps["onClick"] = (info) => {
-    const clickedItem = menuItems.find((item) => item.key === info.key) as any;
-    if (clickedItem?.path) {
-      navigate(clickedItem.path);
-      setDrawerVisible(false);
-    } else if (info.key.includes(":")) {
-      const [parentKey] = info.key.split(":");
-      const parent = menuItems.find((i) => i.key === parentKey) as any;
-      const child = parent?.children.find((c) => c.key === info.key);
-      if (child?.path) {
-        navigate(child.path);
-        setDrawerVisible(false);
-      }
-    }
-  };
+  // const handleMenuClick: MenuProps["onClick"] = (info) => {
+  //   const clickedItem = menuItems?.find((item) => item?.key === info.key);
+  //   if (clickedItem?.path) {
+  //     navigate(clickedItem.path);
+  //     setDrawerVisible(false);
+  //   } else if (info.key.includes(":")) {
+  //     const [parentKey] = info.key.split(":");
+  //     const parent = menuItems.find((i) => i.key === parentKey) as any;
+  //     const child = parent?.children.find((c) => c.key === info.key);
+  //     if (child?.path) {
+  //       navigate(child.path);
+  //       setDrawerVisible(false);
+  //     }
+  //   }
+  // };
 
   // Custom CSS for dark blue underline
-  const menuItemStyle = {
-    color: "#0F3952",
-    fontSize: "1.125rem", // text-lg
-    borderBottom: "2px solid transparent",
-    transition: "border-bottom 0.3s",
-  };
+  // const menuItemStyle = {
+  //   color: "#0F3952",
+  //   fontSize: "1.125rem", // text-lg
+  //   borderBottom: "2px solid transparent",
+  //   transition: "border-bottom 0.3s",
+  // };
 
-  const menuItemHover = {
-    borderBottom: "2px solid #0F3952",
-  };
+  // const menuItemHover = {
+  //   borderBottom: "2px solid #0F3952",
+  // };
 
   return (
-  <header className="navbar flex justify-between items-center px-3 bg-white border-b-2 border-transparent shadow-md sticky top-0 z-50" style={{ height: "100px" }}>
+    <header className="navbar flex justify-between items-center px-3 bg-white border-b-2 border-transparent shadow-md sticky top-0 z-50" style={{ height: "100px" }}>
 
-      
+
       {/* Logo */}
       <div className="navbar-logo flex items-center space-x-2">
         <img src={yostiLogo} alt="Yosti Logo" className="h-12 w-auto" />
@@ -98,23 +97,24 @@ const Navbar: React.FC = () => {
             mode="horizontal"
             items={menuItems}
             className="!border-none !shadow-none"
-            onClick={handleMenuClick}
+            // onClick={handleMenuClick}
             style={{ color: "#0F3952" }}
             selectedKeys={[]}
             overflowedIndicator={<MenuOutlined />}
             itemIcon={null}
-            theme="light"
+              theme="light"
+              
           >
-            {menuItems.map((item) => (
+            {/* {menuItems?.map((item) => (
               <Menu.Item
-                key={item.key}
+                key={item?.key}
                 style={menuItemStyle}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLDivElement).style.borderBottom = "2px solid #0F3952")}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.borderBottom = "2px solid transparent")}
+                // onMouseEnter={(e) => ((e.currentTarget as HTMLDivElement).style.borderBottom = "2px solid #0F3952")}
+                // onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.borderBottom = "2px solid transparent")}
               >
-                {item.label}
+                {item?.label}
               </Menu.Item>
-            ))}
+            ))} */}
           </Menu>
         )}
 
@@ -154,7 +154,7 @@ const Navbar: React.FC = () => {
         {loading ? (
           <Skeleton active paragraph={{ rows: 4 }} />
         ) : (
-          <Menu mode="inline" items={menuItems} onClick={handleMenuClick} selectedKeys={[]} />
+            <Menu mode="inline" items={menuItems} onClick={() => { } } selectedKeys={[]} />
         )}
 
         <Button icon={<LoginOutlined />} type="text" className="mt-4 text-[#0F3952] text-lg">

@@ -31,7 +31,7 @@ import StudentCommunication from "./pages/Students/Communication";
 import StudentProfile from "./pages/Students/Profile";
 
 // Buyer
-import BuyerDashboard from "./pages/buyer/MyRequests";
+// import BuyerDashboard from "./pages/buyer/MyRequests";
 import Requests from "./pages/buyer/MyRequests";
 
 import Trips from "./pages/buyer/MyTrips";
@@ -47,10 +47,10 @@ import VerificationStatus from "./pages/Supplier/VerificationStatus";
 
 // Super-admin
 import SuperDashboard from "./pages/superadmin/Dashboard";
-import SupplierQuotes from "./pages/superadmin/SupplierQuotes";
-import Suppliers from "./pages/superadmin/Suppliers";
+// import SupplierQuotes from "./pages/superadmin/SupplierQuotes";
+// import Suppliers from "./pages/superadmin/Suppliers";
 import BusinessTrips from "./pages/superadmin/BusinessTrips";
-import VisaInvitations from "./pages/superadmin/VisaInvitations";
+// import VisaInvitations from "./pages/superadmin/VisaInvitations";
 import SupportTickets from "./pages/superadmin/SupportTickets";
 import Users from "./pages/superadmin/Users";
 import StaffManagement from "./pages/superadmin/StaffManagement";
@@ -72,7 +72,7 @@ import Register from "./pages/Register";
 import Shipments from "./pages/Admin/Shipments";
 import Dashboard from "./pages/buyer/Dashboard";
 import Quotes from "./pages/buyer/MyQuotes";
-import BlogCard from "./pages/Home/BlogCard";
+// import BlogCard from "./pages/Home/BlogCard";
 import ProductPage from "./pages/product/product";
 import DashboardSupplier from "./pages/Supplier/Dashboard";
 import SupplierProfile from "./pages/Supplier/Profile";
@@ -125,7 +125,7 @@ const App: React.FC = () => {
           </div>
 
           <div className={`fixed top-0 left-64 w-[calc(100%-16rem)] ${HEADER_HEIGHT} bg-white shadow-sm z-30`}>
-            <Header role={role} setRole={setRole} />
+            <Header role={role} email="" />
           </div>
 
           <div className="ml-64 pt-16 min-h-screen bg-gray-50">
@@ -221,9 +221,6 @@ const App: React.FC = () => {
                   <Route path="/allpayments" element={<AllPayments/>} />    
                   <Route path="/alltestimonials" element={<AllTestimonials/>} />
                    <Route path="/allusers" element={<AllUsers/>} />
-               
-                  
-                 
                   <Route path="*" element={<Navigate to="/superadmin/dashboard" replace />} />
                 </>
               )}

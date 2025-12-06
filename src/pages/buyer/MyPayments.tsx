@@ -1,7 +1,8 @@
 // src/pages/buyer/MyPayments.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { Table, Button, Drawer, Form, InputNumber, Select, Tag } from "antd";
 import dayjs from "dayjs";
+import type { ColumnsType } from "antd/es/table";
 
 const { Option } = Select;
 
@@ -45,7 +46,7 @@ export default function MyPayments() {
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [form] = Form.useForm();
 
-  const columns = [
+  const columns:ColumnsType<Payment> = [
     {
       title: "Payment ID",
       dataIndex: "payment_id",
@@ -62,7 +63,7 @@ export default function MyPayments() {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
-      render: (_: any, record: Payment) => `${record.currency} ${record.amount.toFixed(2)}`,
+      render: (_, record: Payment) => `${record.currency} ${record.amount.toFixed(2)}`,
     },
     {
       title: "Payment Method",
@@ -91,7 +92,7 @@ export default function MyPayments() {
     {
       title: "Actions",
       key: "actions",
-      render: (_: any, record: Payment) => (
+      render: (_, record: Payment) => (
         <Button
           style={{
             backgroundColor: "#0f3952",
@@ -109,10 +110,10 @@ export default function MyPayments() {
     },
   ];
 
-  const handleMakePayment = (values: any) => {
+  const handleMakePayment = (values: Payment) => {
     if (!selectedPayment) return;
 
-    const updatedPayments = payments.map((p) =>
+    const updatedPayments:Payment[] = payments.map((p) =>
       p.payment_id === selectedPayment.payment_id
         ? {
             ...p,

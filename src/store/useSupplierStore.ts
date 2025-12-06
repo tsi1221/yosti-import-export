@@ -5,6 +5,7 @@ import { create } from "zustand";
 interface PieDataItem {
   name: string;
   value: number;
+ [key: string]: string | number; 
 }
 
 interface BarDataItem {

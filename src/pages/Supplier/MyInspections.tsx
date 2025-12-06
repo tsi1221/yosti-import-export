@@ -1,8 +1,10 @@
 // src/pages/supplier/MyInspections.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { Table, Button, Modal, Space, message, Tag, Input, Upload } from "antd";
 import { EyeOutlined, CheckOutlined, CloseOutlined, UploadOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+import type { RcFile } from "antd/es/upload";
+import type { ColumnsType } from "antd/es/table";
 
 interface InspectionRequest {
   request_id: string;
@@ -12,7 +14,7 @@ interface InspectionRequest {
   date: string;
   media_required: "Photo" | "Video" | "Photo & Video";
   status: "Pending" | "Accepted" | "Rejected";
-  response?: { remarks: string; files?: any[]; created_at: string };
+  response?: { remarks: string; files?: RcFile[]; created_at: string };
 }
 
 const initialRequests: InspectionRequest[] = [
@@ -42,7 +44,7 @@ export default function MyInspections() {
   const [formModalVisible, setFormModalVisible] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<InspectionRequest | null>(null);
   const [remarks, setRemarks] = useState("");
-  const [files, setFiles] = useState<any[]>([]);
+  const [files, setFiles] = useState<RcFile[]>([]);
 
   const handleAccept = (id: string) => {
     setRequests((prev) =>
@@ -81,7 +83,7 @@ export default function MyInspections() {
     }
   };
 
-  const columns = [
+  const columns:ColumnsType<InspectionRequest> = [
     { title: "Request ID", dataIndex: "request_id", key: "request_id" },
     { title: "Supplier ID", dataIndex: "supplier_id", key: "supplier_id" },
     { title: "Product Type", dataIndex: "product_type", key: "product_type" },
@@ -98,14 +100,14 @@ export default function MyInspections() {
       dataIndex: "status",
       key: "status",
       render: (status: string) => {
-        let color = status === "Accepted" ? "green" : status === "Rejected" ? "red" : "gold";
+        const color = status === "Accepted" ? "green" : status === "Rejected" ? "red" : "gold";
         return <Tag color={color}>{status}</Tag>;
       },
     },
     {
       title: "Actions",
       key: "actions",
-      render: (_: any, record: InspectionRequest) => (
+      render: (_, record: InspectionRequest) => (
         <Space>
           <Button
             type="primary"
@@ -197,7 +199,7 @@ export default function MyInspections() {
             {selectedRequest.response && (
               <div className="mt-2 p-2 border border-gray-200 rounded">
                 <p><strong>Remarks:</strong> {selectedRequest.response.remarks}</p>
-                {selectedRequest.response.files?.map((file: any, idx: number) => {
+                {selectedRequest.response.files?.map((file: RcFile, idx: number) => {
                   const url = URL.createObjectURL(file);
                   if (file.type.startsWith("image/")) {
                     return <img key={idx} src={url} alt="inspection" className="w-full rounded mb-2" />;

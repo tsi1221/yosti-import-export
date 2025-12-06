@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table, Tag, Button, Drawer, Form, Select, Input, Space, message, Popconfirm } from "antd";
 import { EditOutlined, DeleteOutlined, EyeOutlined, CheckOutlined, CloseOutlined, SaveOutlined } from "@ant-design/icons";
+import type { ColumnsType } from "antd/es/table";
 
 const { Option } = Select;
 
@@ -58,14 +59,14 @@ const Payments: React.FC = () => {
       setDrawerOpen(false);
       setSelectedPayment(null);
       form.resetFields();
-    } catch (err) {
+    } catch {
       message.error("Failed to update payment");
     } finally {
       setLoading(false);
     }
   };
 
-  const columns = [
+  const columns:ColumnsType<Payment> = [
     { title: "User ID", dataIndex: "user_id", key: "user_id", render: text => <b>{text}</b> },
     { title: "Service", dataIndex: "service_type", key: "service_type" },
     { title: "Amount", dataIndex: "amount", key: "amount", render: (amount: number, record: Payment) => `${amount} ${record.currency}` },
@@ -75,7 +76,7 @@ const Payments: React.FC = () => {
     {
       title: "Actions",
       key: "actions",
-      render: (_: any, record: Payment) => (
+      render: (_, record: Payment) => (
         <Space>
           <Button type="default" style={{ borderColor: "#0F3952", color: "#0F3952" }} icon={<EyeOutlined />} onClick={() => openDrawer(record, "view")}>View</Button>
           <Button type="default" style={{ borderColor: "#0F3952", color: "#0F3952" }} icon={<EditOutlined />} onClick={() => openDrawer(record, "edit")}>Edit</Button>

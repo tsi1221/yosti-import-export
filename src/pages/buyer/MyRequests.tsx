@@ -1,8 +1,9 @@
 // src/pages/buyer/MyRequests.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { Table, Button, Tag, Drawer, Form, Input, InputNumber, Select, DatePicker, Checkbox, Space } from "antd";
 import { EyeOutlined, PlusOutlined, CloseOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+import type { ColumnsType } from "antd/es/table";
 
 const { Option } = Select;
 
@@ -75,7 +76,7 @@ export default function MyRequests() {
     ? requests.filter((r) => r.status === statusFilter)
     : requests;
 
-  const columns = [
+  const columns:ColumnsType<SourcingRequest> = [
     { title: "Product Name", dataIndex: "product_name", key: "product_name", render: (text: string) => <span className="font-semibold text-[#0A1A4E]">{text}</span> },
     { title: "Quantity", dataIndex: "quantity", key: "quantity" },
     { title: "Target Price ($)", dataIndex: "target_price", key: "target_price" },
@@ -101,7 +102,7 @@ export default function MyRequests() {
     {
       title: "Actions",
       key: "actions",
-      render: (_: any, record: SourcingRequest) => (
+      render: (_, record: SourcingRequest) => (
         <EyeOutlined
           style={{ color: "#0A1A4E", fontSize: "18px", cursor: "pointer" }}
           onClick={() => { setSelectedRequest(record); setDetailVisible(true); }}
@@ -110,7 +111,7 @@ export default function MyRequests() {
     },
   ];
 
-  const handleCreate = (values: any) => {
+  const handleCreate = (values:SourcingRequest) => {
     const newRequest: SourcingRequest = {
       request_id: `REQ-${Math.floor(Math.random() * 1000).toString().padStart(3, "0")}`,
       user_id: "USR-001",
@@ -120,7 +121,7 @@ export default function MyRequests() {
       target_price: values.target_price,
       supplier_region: values.supplier_region,
       sample_required: values.sample_required,
-      deadline: values.deadline.format("YYYY-MM-DD"),
+      deadline: dayjs(values.deadline).format("YYYY-MM-DD"),
       status: "open",
       created_at: new Date().toISOString(),
     };

@@ -1,5 +1,5 @@
 // src/pages/superAdmin/SupportTickets.tsx
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   Tag,
@@ -17,6 +17,7 @@ import {
   CloseOutlined,
   SendOutlined,
 } from "@ant-design/icons";
+import type { ColumnsType } from "antd/es/table";
 
 const { Option } = Select;
 
@@ -117,12 +118,12 @@ export default function SupportTickets() {
 
       message.success("Response sent successfully");
       setResponseDrawerOpen(false);
-    } catch (err) {
+    } catch {
       message.error("Failed to send response");
     }
   };
 
-  const columns = [
+  const columns:ColumnsType<SupportTicket> = [
     {
       title: "Support ID",
       dataIndex: "support_id",
@@ -163,7 +164,7 @@ export default function SupportTickets() {
     },
     {
       title: "Actions",
-      render: (_: any, record: SupportTicket) => (
+      render: (_, record: SupportTicket) => (
         <Space>
           <Button
             type="link"

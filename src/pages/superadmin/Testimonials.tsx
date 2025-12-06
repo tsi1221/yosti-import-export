@@ -1,7 +1,8 @@
 // src/pages/superAdmin/Testimonials.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { Table, Button, Modal, Form, Input, Rate, Select, Space, Tag, message } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import type { ColumnsType } from "antd/es/table";
 
 const { Option } = Select;
 
@@ -91,7 +92,7 @@ export default function AllTestimonials() {
     });
   };
 
-  const columns = [
+  const columns:ColumnsType<Testimonial> = [
     { title: "Name", dataIndex: "name", key: "name" },
     { title: "Country", dataIndex: "country", key: "country" },
     { title: "Review", dataIndex: "review", key: "review" },
@@ -125,7 +126,7 @@ export default function AllTestimonials() {
     {
       title: "Actions",
       key: "actions",
-      render: (_: any, record: Testimonial) => (
+      render: (_, record: Testimonial) => (
         <Space>
           <Button icon={<EditOutlined />} onClick={() => openEditModal(record)} />
           <Button danger icon={<DeleteOutlined />} onClick={() => deleteTestimonial(record)} />

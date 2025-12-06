@@ -9,4 +9,5 @@ export interface Inspection {
   photo_video_files: string[]; // Use this array to track if Photo/Video is required
   report_url?: string;
   created_at: string;
+  photo_video_required?:string,
 }

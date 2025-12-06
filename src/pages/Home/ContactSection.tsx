@@ -32,13 +32,21 @@ const redPinIcon = new L.DivIcon({
   iconSize: [50, 50],
   iconAnchor: [25, 50],
 });
-
-const shanghaiOffice = { name: "Shanghai Office, China", position: [31.2304, 121.4737] };
+interface Contact{
+  name: string,
+  email: string,
+  message:string
+}
+interface Office{
+  name: string,
+  position:L.LatLngExpression
+}
+const shanghaiOffice:Office = { name: "Shanghai Office, China", position: [31.2304, 121.4737] };
 
 const ContactSection: React.FC = () => {
   const [form] = Form.useForm();
 
-  const onFinish = (values: any) => {
+  const onFinish = (values: Contact) => {
     console.log("Form values:", values);
     message.success("Your message has been sent successfully!");
     form.resetFields();

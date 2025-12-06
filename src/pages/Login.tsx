@@ -5,9 +5,10 @@ import { useNavigate } from "react-router-dom";
 import AuthLayout from "../components/BackgroundLayout";
 import type { LoginFormValues } from "./interface";
 import { useAuth } from "../hooks/useAuth";
+import type { Role } from "../components/Sidebar";
 
 interface LoginProps {
-  setRole: (role: string) => void;
+  setRole: (role: Role) => void;
 }
 
 const Login: React.FC<LoginProps> = ({ setRole }) => {

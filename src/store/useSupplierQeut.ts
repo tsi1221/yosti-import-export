@@ -48,7 +48,7 @@ export const useSupplierStore = create<SupplierStore>((set, get) => ({
     },
   ],
 
-  submitQuote: (request_id, quote) => {
+  submitQuote: (request_id) => {
     // Mock: mark request as quoted
     set({
       sourcingRequests: get().sourcingRequests.map((r) =>

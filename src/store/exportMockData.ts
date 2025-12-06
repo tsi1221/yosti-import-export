@@ -1,6 +1,11 @@
 // mockData.ts
 
-export const countries = [
+interface Country{
+  country_id: string,
+  country_name: string,
+  iso_code:string
+}
+export const countries:Country[] = [
   { country_id: "1", country_name: "Ethiopia", iso_code: "ET" },
   { country_id: "2", country_name: "China", iso_code: "CN" },
   { country_id: "3", country_name: "Uganda", iso_code: "UG" },
@@ -16,8 +21,19 @@ export const categories = [
   { category_id: "5", country_id: "4", category_name: "Grains", description: "South Sudan grains", hs_code: "1006" },
 ];
 
+export interface Product {
+  product_id: string,
+  category_id: string,
+  product_name: string,
+  product_description: string,
+  hs_code: string,
+  images: string[]
+  rating: number,
+  producer: string,
+  country_id?:string
+}
 // Products (50)
-export const products = [
+export const products:Product[] = [
   // Coffee (Ethiopia)
   {
     product_id: "1",

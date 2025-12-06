@@ -6,8 +6,9 @@ import {
 } from "antd";
 import { EditOutlined, SaveOutlined, UploadOutlined, EyeOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+import type { ColumnsType } from "antd/es/table";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const initialSupplier = {
   supplier_id: "SUP-001",
@@ -23,7 +24,13 @@ const initialSupplier = {
   created_at: "2025-10-01",
 };
 
-const initialVerifications = [
+export interface Verification{
+  verification_id: string,
+  concerns: string,
+  status: "Pending" | "Approved",
+ created_at:string, 
+}
+const initialVerifications:Verification[] = [
   {
     verification_id: "V-001",
     concerns: "Need admin approval",
@@ -37,7 +44,7 @@ export default function SupplierProfile() {
   const [verifications] = useState(initialVerifications);
   const [editing, setEditing] = useState(false);
   const [logoPreview, setLogoPreview] = useState(supplier.logo);
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState<Verification|null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   const [form] = Form.useForm();
@@ -53,7 +60,7 @@ export default function SupplierProfile() {
     message.success("Saved");
   };
 
-  const columns = [
+  const columns:ColumnsType<Verification> = [
     { title: "ID", dataIndex: "verification_id" },
     { title: "Concerns", dataIndex: "concerns" },
     {
@@ -69,7 +76,7 @@ export default function SupplierProfile() {
     {
       title: "Action",
       render: (_, r) => (
-        <Button type="link" icon={<EyeOutlined />} onClick={() => { setSelected(r); setModalOpen(true); }}>
+        <Button type="link" icon={<EyeOutlined />} onClick={() => { setSelected(r??null); setModalOpen(true); }}>
           View
         </Button>
       ),
