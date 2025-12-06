@@ -1,8 +1,9 @@
 // src/pages/supplier/MyQuotes.tsx
-import React, { useState } from "react";
+import  { useState } from "react";
 import { Table, Button, Modal, Input, Space, message } from "antd";
 import { EyeOutlined, MessageOutlined, SendOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+import type { ColumnsType } from "antd/es/table";
 
 interface SupplierQuote {
   quote_id: string;
@@ -56,7 +57,7 @@ export default function MyQuotes() {
       return;
     }
     if (selectedQuote) {
-      const updatedQuotes = quotes.map((q) =>
+      const updatedQuotes:SupplierQuote[] = quotes.map((q) =>
         q.quote_id === selectedQuote.quote_id
           ? {
               ...q,
@@ -73,7 +74,7 @@ export default function MyQuotes() {
     }
   };
 
-  const columns = [
+  const columns:ColumnsType<SupplierQuote> = [
     { title: "Request ID", dataIndex: "request_id", key: "request_id" },
     { title: "Buyer", dataIndex: "buyer_name", key: "buyer_name" },
     { title: "Price ($)", dataIndex: "price", key: "price" },
@@ -88,7 +89,7 @@ export default function MyQuotes() {
     {
       title: "Actions",
       key: "actions",
-      render: (_: any, record: SupplierQuote) => (
+      render: (_, record: SupplierQuote) => (
         <Space>
           <Button
             type="primary"

@@ -58,7 +58,7 @@ const InfiniteTestimonials: React.FC = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .animate-scroll {
           display: flex;
           gap: 2rem;

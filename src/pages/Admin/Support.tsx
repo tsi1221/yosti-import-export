@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, type Key } from "react";
 import { Table, Tag, Drawer, Form, Input, Select, Button, Space, message } from "antd";
 import { EyeOutlined, EditOutlined, CloseOutlined, SaveOutlined } from "@ant-design/icons";
+import type { ColumnsType } from "antd/es/table";
 
 const { Option } = Select;
 
@@ -111,10 +112,11 @@ const SupportTable: React.FC = () => {
   const filteredTickets = tickets.filter((t) => {
     const statusMatch = filters.status ? t.status === filters.status : true;
     const urgencyMatch = filters.urgency ? t.urgency === filters.urgency : true;
+    handleFilterChange("", "");
     return statusMatch && urgencyMatch;
   });
 
-  const columns = [
+  const columns:ColumnsType<SupportTicket> = [
     { title: "Order Ref", dataIndex: "orderReference", key: "orderReference" },
     { title: "Issue Type", dataIndex: "issueType", key: "issueType" },
     { 
@@ -130,7 +132,7 @@ const SupportTable: React.FC = () => {
         { text: "Resolved", value: "resolved" },
         { text: "Closed", value: "closed" },
       ],
-      onFilter: (value: string, record: SupportTicket) => record.status === value
+      onFilter: (value: Key|boolean, record: SupportTicket) => record.status === value
     },
     {
       title: "Urgency",
@@ -145,12 +147,12 @@ const SupportTable: React.FC = () => {
         { text: "Medium", value: "medium" },
         { text: "Low", value: "low" },
       ],
-      onFilter: (value: string, record: SupportTicket) => record.urgency === value
+      onFilter: (value: Key|boolean, record: SupportTicket) => record.urgency === value
     },
     {
       title: "Action",
       key: "action",
-      render: (_: any, record: SupportTicket) => (
+      render: (_, record: SupportTicket) => (
         <Space>
           <Button type="link" icon={<EyeOutlined />} onClick={() => handleView(record)}>
             View

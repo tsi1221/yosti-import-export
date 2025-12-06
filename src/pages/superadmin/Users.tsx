@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Table,
   Button,
@@ -18,6 +18,7 @@ import {
   SwapOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
+import type { ColumnsType } from "antd/es/table";
 
 const { Option } = Select;
 
@@ -146,7 +147,7 @@ export default function AllUsers() {
   // TABLE COLUMNS
   // ---------------------------
 
-  const columns = [
+  const columns:ColumnsType<UserType> = [
     {
       title: "Name",
       dataIndex: "fullName",
@@ -166,7 +167,7 @@ export default function AllUsers() {
     },
     {
       title: "Actions",
-      render: (_: any, record: UserType) => (
+      render: (_, record: UserType) => (
         <Space>
           <Button icon={<EyeOutlined />} type="link" onClick={() => handleView(record)}>
             View

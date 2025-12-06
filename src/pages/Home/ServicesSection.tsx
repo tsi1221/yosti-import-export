@@ -49,7 +49,7 @@ const servicesData = [
 ];
 
 const ServicesSection: React.FC = () => {
-  const cardRefs = useRef<HTMLDivElement[]>([]);
+  const cardRefs =useRef<(HTMLDivElement | null)[]>([]);
   const [visibleCards, setVisibleCards] = useState<boolean[]>(
     Array(servicesData.length).fill(false)
   );
@@ -59,7 +59,7 @@ const ServicesSection: React.FC = () => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const index = cardRefs.current.indexOf(entry.target as HTMLDivElement);
+            const index = cardRefs.current?.indexOf(entry.target as HTMLDivElement)??-1;
             if (index !== -1) {
               setVisibleCards((prev) => {
                 const newVisible = [...prev];
@@ -73,10 +73,10 @@ const ServicesSection: React.FC = () => {
       { threshold: 0.3 } // trigger when 30% of card is visible
     );
 
-    cardRefs.current.forEach((ref) => ref && observer.observe(ref));
+    cardRefs?.current?.forEach((ref) => ref && observer.observe(ref));
 
     return () => {
-      cardRefs.current.forEach((ref) => ref && observer.unobserve(ref));
+      cardRefs?.current?.forEach((ref) => ref && observer.unobserve(ref));
     };
   }, []);
 
@@ -89,10 +89,13 @@ const ServicesSection: React.FC = () => {
         <div className="w-24 h-1 bg-[#0F3952] mx-auto rounded-full mb-12 shadow-lg"></div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+          
           {servicesData.map((service, index) => (
             <div
               key={index}
-              ref={(el) => (cardRefs.current[index] = el!)}
+             ref={(el) => {
+        cardRefs.current[index] = el;
+      }}
               className={`relative bg-white rounded-2xl p-8 flex flex-col items-center
                 shadow-md transition-transform transition-opacity duration-700
                 ${visibleCards[index] ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}

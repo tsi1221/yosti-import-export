@@ -1,8 +1,10 @@
 // src/pages/supplier/OpenRequests.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { Table, Button, Drawer, Input, Upload, message, Modal, Form } from "antd";
 import { UploadOutlined, EyeOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+import type { RcFile } from "antd/es/upload";
+import type { ColumnsType } from "antd/es/table";
 
 interface SupplierVerification {
   verification_id: string;
@@ -73,7 +75,7 @@ export default function OpenRequests() {
     location_province: "",
   });
   const [concerns, setConcerns] = useState("");
-  const [logoFile, setLogoFile] = useState<any>(null);
+  const [logoFile, setLogoFile] = useState<RcFile|null>(null);
 
   const handleInputChange = (field: keyof Supplier, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -141,7 +143,7 @@ export default function OpenRequests() {
     }
   };
 
-  const columns = [
+  const columns:ColumnsType<SupplierVerification> = [
     { title: "Verification ID", dataIndex: "verification_id", key: "verification_id" },
     { title: "Supplier ID", dataIndex: "supplier_id", key: "supplier_id" },
     { title: "Requester", dataIndex: "requester_name", key: "requester_name" },
@@ -159,7 +161,7 @@ export default function OpenRequests() {
     {
       title: "Action",
       key: "action",
-      render: (_: any, record: SupplierVerification) => (
+      render: (__, record: SupplierVerification) => (
         <Button
           icon={<EyeOutlined />}
           type="link"

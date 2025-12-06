@@ -1,25 +1,32 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Table, Button, Modal, Form, Input, Select, Space, Tag, message } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import type { ColumnsType } from "antd/es/table";
 
 const { Option } = Select;
-
+export interface Staff{
+  id: string,
+  name: string,
+  email: string,
+  role: string,
+  phone:string
+}
 export default function StaffManagement() {
-  const [staff, setStaff] = useState([
+  const [staff, setStaff] = useState<Staff[]>([
     { id: "ADM001", name: "Yonatan Alemu", email: "yonatan@example.com", role: "admin", phone: "+251911223344" },
     { id: "ADM002", name: "Lidya Mebratu", email: "lidya@example.com", role: "finance", phone: "+251922334455" },
   ]);
 
   const [openAdd, setOpenAdd] = useState(false);
   const [openAssign, setOpenAssign] = useState(false);
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState<Staff|null>(null);
 
   const [addForm] = Form.useForm();
   const [assignForm] = Form.useForm();
 
   const openAddModal = () => { addForm.resetFields(); setSelected(null); setOpenAdd(true); };
 
-  const editStaff = (record) => {
+  const editStaff = (record:Staff) => {
     setSelected(record);
     addForm.setFieldsValue(record);
     setOpenAdd(true);
@@ -41,7 +48,7 @@ export default function StaffManagement() {
     }).catch(() => {});
   };
 
-  const deleteStaff = (record) => {
+  const deleteStaff = (record:Staff) => {
     Modal.confirm({
       title: "Delete Staff?",
       content: `Are you sure you want to delete ${record.name}?`,
@@ -51,10 +58,10 @@ export default function StaffManagement() {
     });
   };
 
-  const assignRole = (record) => { setSelected(record); assignForm.setFieldsValue({ role: record.role }); setOpenAssign(true); };
+  const assignRole = (record:Staff) => { setSelected(record); assignForm.setFieldsValue({ role: record.role }); setOpenAssign(true); };
   const saveAssign = () => {
     assignForm.validateFields().then(values => {
-      setStaff(prev => prev.map(s => s.id === selected.id ? { ...s, role: values.role } : s));
+      setStaff(prev => prev.map(s => s.id === selected?.id ? { ...s, role: values.role } : s));
       message.success("Role updated successfully");
       setOpenAssign(false);
       assignForm.resetFields();
@@ -62,13 +69,14 @@ export default function StaffManagement() {
     }).catch(() => {});
   };
 
-  const columns = [
+  
+  const columns:ColumnsType<Staff> = [
     { title: "ID", dataIndex: "id" },
     { title: "Full Name", dataIndex: "name" },
     { title: "Email", dataIndex: "email" },
     { title: "Phone", dataIndex: "phone" },
-    { title: "Role", dataIndex: "role", render: (role) => <Tag color="blue">{role.toUpperCase()}</Tag> },
-    { title: "Actions", render: (_, record) => (
+    { title: "Role", dataIndex: "role", render: (role:string) => <Tag color="blue">{role.toUpperCase()}</Tag> },
+    { title: "Actions", render: (record:Staff) => (
       <Space>
         <Button icon={<EditOutlined />} onClick={() => editStaff(record)} />
         <Button icon={<UserSwitchOutlined />} onClick={() => assignRole(record)} />

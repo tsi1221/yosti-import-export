@@ -1,7 +1,6 @@
 import { useState } from "react";
 import type { BusinessTrip, VisaInvitation } from "../pages/buyer/type/TripsInterface";
 import { message } from "antd";
-import dayjs from "dayjs";
 
 const initialBusinessTrips: BusinessTrip[] = [
   {

@@ -1,8 +1,10 @@
 // src/pages/logistics/NewBooking.tsx
-import React, { useState } from "react";
+import  { useState } from "react";
 import { Button, Modal, Form, Input, Select, DatePicker, Upload, message, Table, Tag, Space, Popconfirm } from "antd";
 import { UploadOutlined, EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+import type { ColumnsType } from "antd/es/table";
+import type { RcFile } from "antd/es/upload";
 
 const { Option } = Select;
 
@@ -12,7 +14,8 @@ interface Booking {
   status: string;
   estDelivery: string;
   shipmentType?: string;
-  docs?: any[];
+  docs?: RcFile[];
+  estimatedDelivery?:string,
 }
 
 const initialBookings: Booking[] = [
@@ -41,7 +44,7 @@ export default function NewBooking() {
     setModalVisible(true);
   };
 
-  const handleBookingSubmit = (values: any) => {
+  const handleBookingSubmit = (values: Booking) => {
     if (editingBooking) {
       // Edit existing
       setBookings((prev) =>
@@ -75,7 +78,7 @@ export default function NewBooking() {
     message.success("Booking deleted!");
   };
 
-  const columns = [
+  const columns:ColumnsType<Booking> = [
     { title: "Shipment ID", dataIndex: "id", key: "id" },
     { title: "Customer", dataIndex: "customer", key: "customer" },
     {
@@ -98,7 +101,7 @@ export default function NewBooking() {
     {
       title: "Actions",
       key: "actions",
-      render: (_: any, record: Booking) => (
+      render: (_, record: Booking) => (
         <Space>
           <Button icon={<EyeOutlined />} size="small" onClick={() => openModal(record)}>
             View

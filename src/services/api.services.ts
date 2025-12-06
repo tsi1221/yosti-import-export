@@ -1,6 +1,6 @@
 // src/service/api.service.ts
-import axios, { AxiosRequestConfig } from 'axios';
-import { ACCESS_TOKEN } from "@/constants/index";
+import axios, { type AxiosRequestConfig } from 'axios';
+import { ACCESS_TOKEN } from "../constants/index";
 
 const ApiService = (config?: AxiosRequestConfig) => {
   const instance = axios.create({

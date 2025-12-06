@@ -1,7 +1,7 @@
 // src/pages/AdminDashboard.tsx
 import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Table, Button, Drawer, Form, Input, Switch, Tag } from "antd";
-import { EditOutlined, EyeOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 
 const { Column, ColumnGroup } = Table;
 
@@ -75,8 +75,8 @@ const AdminDashboard: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<"users" | "suppliers">("users");
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
-  const [editingSupplier, setEditingSupplier] = useState<Supplier | null>(null);
+  const [editingUser, setEditingUser] = useState<User|Supplier | null>(null);
+  const [editingSupplier, setEditingSupplier] = useState<Supplier|User | null>(null);
   const [viewMode, setViewMode] = useState(false);
   const [form] = Form.useForm();
 
@@ -167,7 +167,7 @@ const AdminDashboard: React.FC = () => {
     });
   }, []);
 
-  const openDrawer = (type: "user" | "supplier", record: any, view: boolean = false) => {
+  const openDrawer = (type: "user" | "supplier", record: User|Supplier|null, view: boolean = false) => {
     setViewMode(view);
     if (type === "user") {
       setEditingUser(record);
@@ -251,7 +251,7 @@ const AdminDashboard: React.FC = () => {
 
             <Column
               title="Actions"
-              render={(_: any, record: User) => (
+              render={(_, record: User) => (
                 <div style={{ display: "flex", gap: 6 }}>
                   <Button icon={<EyeOutlined />} size="small" onClick={() => openDrawer("user", record, true)} />
                   <Button icon={<EditOutlined />} size="small" onClick={() => openDrawer("user", record)} />
@@ -289,7 +289,7 @@ const AdminDashboard: React.FC = () => {
 
             <Column
               title="Actions"
-              render={(_: any, record: Supplier) => (
+              render={(_, record: Supplier) => (
                 <div style={{ display: "flex", gap: 6 }}>
                   <Button icon={<EyeOutlined />} size="small" onClick={() => openDrawer("supplier", record, true)} />
                   <Button icon={<EditOutlined />} size="small" onClick={() => openDrawer("supplier", record)} />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { Table, Tag, Button, Tabs, Drawer, Form, Input, DatePicker, InputNumber, Checkbox } from "antd";
 import dayjs from "dayjs";
 import { useTrips } from "../../hooks/useTrips";
@@ -26,7 +26,7 @@ export default function MyTrips() {
     if (drawerType === "trip") {
       addBusinessTrip({
         arrival_city: values.arrival_city,
-        arrival_date: values.arrival_date.format("YYYY-MM-DD"),
+        arrival_date: dayjs(values.arrival_date).format("YYYY-MM-DD"),
         duration_days: values.duration_days,
         hotel_booking: values.hotel_booking || false,
         transport: values.transport || false,
@@ -34,11 +34,11 @@ export default function MyTrips() {
       });
     } else {
       addVisaInvitation({
-        passport_number: values.passport_number,
-        nationality: values.nationality,
-        planned_arrival_date: values.planned_arrival_date.format("YYYY-MM-DD"),
+        passport_number: values.passport_number??'',
+        nationality: values.nationality??'',
+        planned_arrival_date: dayjs(values.planned_arrival_date).format("YYYY-MM-DD"),
         duration_days: values.duration_days,
-        purpose: values.purpose,
+        purpose: values.purpose??"",
       });
     }
     closeDrawer();

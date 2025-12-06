@@ -11,6 +11,10 @@ export interface BusinessTrip {
   transport: boolean;
   translator: boolean;
   status: BusinessTripStatus;
+  passport_number?: string,
+  planned_arrival_date?: string,
+  nationality?: string,
+  purpose?:string
 }
 
 export interface VisaInvitation {

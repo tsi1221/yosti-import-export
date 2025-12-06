@@ -1,5 +1,4 @@
 // src/pages/superAdmin/Dashboard.tsx
-import React from "react";
 import {
   UserOutlined,
   ShopOutlined,
@@ -21,6 +20,11 @@ import {
   LabelList,
 } from "recharts";
 
+export interface StatCardProps{
+  icon: React.ReactNode,
+  title: string,
+  value:string|number
+}
 export default function Dashboard() {
   const actions = [
     { label: "total Buyers", path: "/super-admin/buyers" },
@@ -121,8 +125,9 @@ export default function Dashboard() {
   );
 }
 
+
 /* COMPONENT */
-function StatCard({ icon, title, value }) {
+function StatCard({ icon, title, value }:StatCardProps) {
   return (
     <div className="relative bg-white shadow rounded-xl p-6 flex items-center">
       <div className="absolute inset-y-0 left-0 w-2 bg-yellow-500 rounded-l-xl"></div>

@@ -60,7 +60,7 @@ export default function MyInspectionsBuyer() {
       user_id: "USR-001",
       product_type: values.product_type,
       inspection_type: values.inspection_type,
-      date: values.date.format("YYYY-MM-DD"),
+      date:dayjs(values.date).format("YYYY-MM-DD"),
       photo_video_files: values.photo_video_required ? ["required"] : [],
       report_url: "",
       created_at: dayjs().format("YYYY-MM-DD"),

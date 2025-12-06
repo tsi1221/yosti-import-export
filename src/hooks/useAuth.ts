@@ -3,6 +3,7 @@ import { useState } from "react";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import type { LoginFormValues, User } from "../pages/interface";
+import type { Role } from "../components/Sidebar";
 
 const MOCK_USERS: User[] = [
   { email: "buyer@example.com", password: "password123", role: "buyer" },
@@ -13,7 +14,7 @@ const MOCK_USERS: User[] = [
   { email: "student@example.com", password: "password123", role: "student" },
 ];
 
-export const useAuth = (setRole: (role: string) => void) => {
+export const useAuth = (setRole: (role: Role) => void) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -33,8 +34,11 @@ export const useAuth = (setRole: (role: string) => void) => {
       }
 
       localStorage.setItem("token", "mock-token");
-      localStorage.setItem("role", user.role);
-      setRole(user.role);
+      if (user.role) {
+        
+        localStorage.setItem("role", user.role);
+        setRole(user.role);
+      }
 
       message.success(`Welcome, ${user.role}!`);
 
@@ -47,7 +51,7 @@ export const useAuth = (setRole: (role: string) => void) => {
         logistics: "/logistics/dashboard",
       };
 
-      navigate(roleRoutes[user.role] || "/dashboard");
+      navigate(roleRoutes[user.role??'/dashboard'] || "/dashboard");
     } catch {
       message.error("Login failed");
     } finally {

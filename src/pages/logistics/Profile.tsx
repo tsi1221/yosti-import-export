@@ -1,7 +1,8 @@
 // src/pages/logistics/Profile.tsx
-import React, { useState } from "react";
+import  { useState } from "react";
 import { Button, Input, Upload, message, Form } from "antd";
 import { UploadOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
+import type { RcFile } from "antd/es/upload";
 
 interface LogisticsProfile {
   name: string;
@@ -27,7 +28,7 @@ export default function Profile() {
   const [profile, setProfile] = useState<LogisticsProfile>(initialProfile);
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState<Partial<LogisticsProfile>>(profile);
-  const [profileFile, setProfileFile] = useState<any>(null);
+  const [profileFile, setProfileFile] = useState<RcFile|null>(null);
 
   const handleInputChange = (field: keyof LogisticsProfile, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));

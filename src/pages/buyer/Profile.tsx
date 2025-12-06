@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Card,
   Row,
@@ -35,7 +35,7 @@ export default function BuyerProfile() {
     avatar: "",
   };
 
-  const handleUpdate = async (values: unknown) => {
+  const handleUpdate = async () => {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 1000));
 
@@ -44,7 +44,7 @@ export default function BuyerProfile() {
     setLoading(false);
   };
 
-  const handleChangePassword = async (values: unknown) => {
+  const handleChangePassword = async () => {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 1000));
     message.success("Password changed!");

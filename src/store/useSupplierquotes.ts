@@ -35,7 +35,7 @@ interface SupplierStore {
   submitQuote: (quote: SupplierQuote) => void;
 }
 
-export const useSupplierStore = create<SupplierStore>((set, get) => ({
+export const useSupplierStore = create<SupplierStore>((set) => ({
   openRequests: [
     {
       request_id: "REQ-001",
