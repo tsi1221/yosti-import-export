@@ -89,6 +89,12 @@ import AllExportProducts from "./pages/superadmin/ExportProducts";
 import AllBlog from "./pages/superadmin/Blog";
 import AllTestimonials from "./pages/superadmin/Testimonials";
 import AllUsers from "./pages/superadmin/Users";
+import WhyChoose from "./pages/Home/Whychoose";
+import OURPROJECT from "./pages/Home/Ourproject";
+import TwoFA from "./pages/TwoFA";
+import ForgotPassword from "./pages/ForgotPassword";
+import Productt from "./pages/Home/product";
+// import Productt  from "./pages/Home/productt";
 
 const SIDEBAR_WIDTH = "w-64";
 const HEADER_HEIGHT = "h-16";
@@ -251,12 +257,17 @@ const App: React.FC = () => {
               }
             />
             <Route path="/about" element={<AboutSection />} />
+            <Route path="/whychoose" element={<WhyChoose/>} />
             <Route path="/services" element={<ServicesSection />} /> {/* Public page */}
             <Route path="/exports/coffee" element={<ExportProductsSection />} />
             <Route path="/exports/spices" element={<ExportProductsSection />} />
+            <Route path="/Ourproject" element={<OURPROJECT/>} />
+            <Route path="/projectt" element={<Productt />} />
             <Route path="/exports/oilseeds" element={<ExportProductsSection />} />
             <Route path="/testimonials" element={<TestimonialsSection />} />
             <Route path="/contact" element={<ContactSection />} />
+            <Route path="/2fa" element={<TwoFA />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/blog/news" element={<Blog />} />
             <Route path="/products" element={<ProductPage/>} />
             <Route path="/login" element={<Login setRole={setRole} />} />

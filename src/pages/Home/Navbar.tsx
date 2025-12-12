@@ -1,166 +1,219 @@
 import React, { useState, useEffect } from "react";
-import { Menu, Button, Skeleton, Drawer } from "antd";
-import { LoginOutlined, MenuOutlined, DownOutlined } from "@ant-design/icons";
+import { Menu, Button, Drawer, Dropdown, Space, Tooltip } from "antd";
+import {
+  LoginOutlined,
+  DownOutlined,
+  GlobalOutlined,
+  FlagOutlined,
+  MenuOutlined,
+  EnvironmentOutlined,
+  PhoneOutlined,
+  ClockCircleOutlined,
+} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import type { MenuProps } from "antd";
 import yostiLogo from "../../assets/yostilogo.png";
 
 const Navbar: React.FC = () => {
-  const [loading, setLoading] = useState(true);
-  const [drawerVisible, setDrawerVisible] = useState(false);
   const navigate = useNavigate();
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("EN");
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    const handleScroll = () => drawerVisible && setDrawerVisible(false);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [drawerVisible]);
 
-  const menuItems: MenuProps["items"] = [
-    { label: "Home", key: "home", path: "/" },
-    { label: "About Us", key: "about", path: "/about" },
-    { label: "Services", key: "services", path: "/services" },
+  const offices = [
     {
-      label: (
-        <span>
-          Blog <DownOutlined style={{ fontSize: 12 }} />
-        </span>
-      ),
-      key: "blog",
-      children: [
-        { label: "Company News", key: "blog:news", path: "/blog/news" },
-        { label: "Industry Insights", key: "blog:insights", path: "/blog/insights" },
-      ],
+      city: "Shanghai",
+      address: "Room A13, 10th Floor, No. 1, Lane 1136, Xinzha Road, Jing’an District, Shanghai, China",
+      fullAddress: "中国上海市静安区新闸路 1136 弄 1 号 10 楼 A13 室",
+      phone: "+86 21 6888 8888",
+      hours: "Mon-Fri: 9:00-18:00",
+      color: "bg-blue-400",
     },
     {
-      label: (
-        <span>
-          Export Products <DownOutlined style={{ fontSize: 12 }} />
-        </span>
-      ),
-      key: "exports",
-      children: [
-        { label: "Coffee", key: "exports:coffee", path: "/exports/coffee" },
-        { label: "Spices", key: "exports:spices", path: "/exports/spices" },
-        { label: "Oil Seeds", key: "exports:oilseeds", path: "/exports/oilseeds" },
-      ],
+      city: "Yiwu",
+      address: "Room 2106, Building 3, Zhongfu Plaza, Futian Street, Yiwu, Zhejiang Province, China",
+      fullAddress: "中国浙江省义乌市福田街道中福广场 3 号楼 2106 室",
+      phone: "+86 579 8555 6666",
+      hours: "Mon-Sat: 8:30-17:30",
+      color: "bg-green-400",
     },
-    { label: "Testimonials", key: "testimonials", path: "/testimonials" },
-    { label: "Contact", key: "contact", path: "/contact" },
   ];
 
-  const handleMenuClick: MenuProps["onClick"] = (info) => {
-    const clickedItem = menuItems.find((item) => item.key === info.key) as any;
-    if (clickedItem?.path) {
-      navigate(clickedItem.path);
-      setDrawerVisible(false);
-    } else if (info.key.includes(":")) {
-      const [parentKey] = info.key.split(":");
-      const parent = menuItems.find((i) => i.key === parentKey) as any;
-      const child = parent?.children.find((c) => c.key === info.key);
-      if (child?.path) {
-        navigate(child.path);
-        setDrawerVisible(false);
-      }
-    }
-  };
+  const menuItems: MenuProps["items"] = [
+    { label: "Home", key: "/" },
+    { label: "Track Shipment", key: "/track" },
+    {
+      label: <span className="flex items-center">Industries <DownOutlined className="ml-1 text-xs" /></span>,
+      key: "industries",
+      children: [
+        { label: "Construction Equipment & Materials", key: "/industries/construction" },
+        { label: "Consumer Goods & Apparel", key: "/industries/consumer" },
+        { label: "Agricultural Tools & Supplies", key: "/industries/agriculture" },
+        { label: "Electronics & Gadgets", key: "/industries/electronics" },
+        { label: "Food & Beverages", key: "/industries/food" },
+        { label: "Vehicles & Spare Parts", key: "/industries/vehicles" },
+      ],
+    },
+    { label: "Services", key: "/services" },
+    { label: "Why Choose Us", key: "/Whychoose" },
+    { label: "Our Projects", key: "/Ourproject" },
+    { label: "Blog", key: "/blog/news     " },
+    { label: "About Us", key: "/about" },
+    { label: "Contact Us", key: "/contact" },
+  ];
 
-  // Custom CSS for dark blue underline
-  const menuItemStyle = {
-    color: "#0F3952",
-    fontSize: "1.125rem", // text-lg
-    borderBottom: "2px solid transparent",
-    transition: "border-bottom 0.3s",
-  };
+  const languageMenuItems = [
+    { label: <Space><FlagOutlined /> English</Space>, key: "EN" },
+    { label: <Space><FlagOutlined /> Amharic</Space>, key: "AM" },
+    { label: <Space><FlagOutlined /> Chinese</Space>, key: "CN" },
+    { label: <Space><FlagOutlined /> Oromiffa</Space>, key: "OR" },
+  ];
 
-  const menuItemHover = {
-    borderBottom: "2px solid #0F3952",
+  const handleLanguageSelect: MenuProps["onClick"] = ({ key }) => setSelectedLanguage(key);
+  const handleMenuClick: MenuProps["onClick"] = ({ key }) => {
+    navigate(key);
+    setDrawerVisible(false);
   };
 
   return (
-  <header className="navbar flex justify-between items-center px-3 bg-white border-b-2 border-transparent shadow-md sticky top-0 z-50" style={{ height: "100px" }}>
-
-      
-      {/* Logo */}
-      <div className="navbar-logo flex items-center space-x-2">
-        <img src={yostiLogo} alt="Yosti Logo" className="h-12 w-auto" />
-        <span className="text-3xl font-bold">
-          <span className="text-yellow-400">Y</span>
-          <span className="text-[#0F3952]">osti</span>
-        </span>
-      </div>
-
-      {/* Desktop Menu */}
-      <div className="hidden md:flex items-center space-x-6">
-        {loading ? (
-          <Skeleton.Input active size="default" style={{ width: 400, border: "none", boxShadow: "none" }} />
-        ) : (
-          <Menu
-            mode="horizontal"
-            items={menuItems}
-            className="!border-none !shadow-none"
-            onClick={handleMenuClick}
-            style={{ color: "#0F3952" }}
-            selectedKeys={[]}
-            overflowedIndicator={<MenuOutlined />}
-            itemIcon={null}
-            theme="light"
-          >
-            {menuItems.map((item) => (
-              <Menu.Item
-                key={item.key}
-                style={menuItemStyle}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLDivElement).style.borderBottom = "2px solid #0F3952")}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.borderBottom = "2px solid transparent")}
+    <header className="w-full bg-white shadow sticky top-0 z-50">
+      {/* Office Bar */}
+      <div className="bg-[#0F3952] text-white py-1">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-sm">
+          <div className="flex items-center mb-1 md:mb-0">
+            <EnvironmentOutlined className="mr-2 text-yellow-400" />
+            <span className="font-medium">Global Offices:</span>
+          </div>
+          <div className="flex flex-wrap justify-center gap-3 md:gap-4">
+            {offices.map((office, idx) => (
+              <Tooltip
+                key={idx}
+                title={
+                  <div className="p-2">
+                    <div className="font-bold text-[#0F3952] mb-1">{office.city}</div>
+                    <div className="text-sm">{office.address}</div>
+                    <div className="text-xs text-gray-600 mt-1">{office.fullAddress}</div>
+                    <div className="flex items-center mt-1 text-xs">
+                      <PhoneOutlined className="mr-1" /> {office.phone}
+                    </div>
+                    <div className="flex items-center text-xs">
+                      <ClockCircleOutlined className="mr-1" /> {office.hours}
+                    </div>
+                  </div>
+                }
+                placement="bottom"
+                color="white"
               >
-                {item.label}
-              </Menu.Item>
+                <div className="flex items-center cursor-pointer group">
+                  <div className={`w-2 h-2 rounded-full ${office.color} mr-1 group-hover:animate-pulse`}></div>
+                  <span className="font-semibold">{office.city}:</span>
+                  <span className="ml-1 text-sm opacity-90 hidden sm:inline">{office.address}</span>
+                </div>
+              </Tooltip>
             ))}
-          </Menu>
-        )}
-
-        <a href="/login">
-          <Button
-            icon={<LoginOutlined />}
-            type="text"
-            style={{ color: "#0F3952", borderBottom: "2px solid transparent" }}
-            onMouseEnter={(e) => (e.currentTarget.style.borderBottom = "3px solid #0F3952")}
-            onMouseLeave={(e) => (e.currentTarget.style.borderBottom = "2px solid transparent")}
-          >
-            Login
-          </Button>
-        </a>
+          </div>
+          <div className="hidden md:flex items-center text-sm">
+            <PhoneOutlined className="mr-1 text-yellow-400" />
+            <span>24/7 Support: +86 400 123 4567</span>
+          </div>
+        </div>
       </div>
 
-      {/* Mobile Menu Button */}
-      <div className="md:hidden">
-        <Button icon={<MenuOutlined className="text-[#0F3952]" />} type="text" onClick={() => setDrawerVisible(true)} />
+      {/* Main Navbar */}
+      <div className="py-3">
+        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
+          {/* Logo */}
+          <div className="flex items-center cursor-pointer" onClick={() => navigate("/")}>
+            <img src={yostiLogo} alt="Yosti Logo" className="h-10 w-auto" />
+            <span className="text-2xl font-bold ml-2 text-[#0F3952]"><span className="text-yellow-500">Y</span>osti</span>
+          </div>
+
+          {/* Desktop Menu */}
+          <div className="hidden lg:flex flex-1 justify-center">
+            <Menu
+              mode="horizontal"
+              items={menuItems}
+              onClick={handleMenuClick}
+              className="!border-none !bg-transparent flex-1 justify-center text-[#0F3952]"
+              style={{ fontSize: "14px", width: "100%" }}
+            />
+          </div>
+
+          {/* Right Items */}
+          <div className="flex items-center space-x-2">
+            <Dropdown overlay={<Menu items={languageMenuItems} onClick={handleLanguageSelect} />} placement="bottomRight" trigger={["click"]}>
+              <Button type="text" className="flex items-center text-[#0F3952] hover:text-[#0F3952]/80">
+                <GlobalOutlined />
+                <Space>{selectedLanguage} <DownOutlined className="text-xs" /></Space>
+              </Button>
+            </Dropdown>
+
+            <Button
+              icon={<LoginOutlined />}
+              type="default"
+              className="rounded-full border-2 border-[#0F3952] text-[#0F3952] px-3 py-1 hover:border-yellow-500 hover:text-yellow-500"
+              onClick={() => navigate("/login")}
+            >
+              <span className="hidden sm:inline">Login</span>
+              <span className="sm:hidden">Sign In</span>
+            </Button>
+
+            <div className="lg:hidden">
+              <Button
+                icon={<MenuOutlined className="text-xl text-[#0F3952]" />}
+                type="text"
+                onClick={() => setDrawerVisible(true)}
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Drawer (Mobile Menu) */}
+      {/* Mobile Drawer */}
       <Drawer
         title={
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center cursor-pointer" onClick={() => navigate("/")}>
             <img src={yostiLogo} alt="Yosti Logo" className="h-10 w-auto" />
-            <span className="text-2xl font-bold">
-              <span className="text-yellow-400">Y</span>
-              <span className="text-[#0F3952]">osti</span>
-            </span>
+            <span className="text-2xl font-bold ml-2 text-[#0F3952]"><span className="text-yellow-500">Y</span>osti</span>
           </div>
         }
         placement="right"
         onClose={() => setDrawerVisible(false)}
         open={drawerVisible}
+        width={280}
       >
-        {loading ? (
-          <Skeleton active paragraph={{ rows: 4 }} />
-        ) : (
-          <Menu mode="inline" items={menuItems} onClick={handleMenuClick} selectedKeys={[]} />
-        )}
+        <div className="mb-4 p-3 bg-[#0F3952] rounded-lg text-white">
+          {offices.map((office, idx) => (
+            <div key={idx} className="mb-3 last:mb-0">
+              <div className="flex items-center mb-1">
+                <div className={`w-2 h-2 rounded-full ${office.color} mr-2`}></div>
+                <h4 className="font-semibold">{office.city}</h4>
+              </div>
+              <p className="text-sm opacity-90 mb-1">{office.address}</p>
+              <p className="text-xs opacity-75 mb-1">{office.fullAddress}</p>
+              <div className="text-xs opacity-75 flex items-center mb-1">
+                <PhoneOutlined className="mr-1" /> {office.phone}
+              </div>
+              <div className="text-xs opacity-75 flex items-center">
+                <ClockCircleOutlined className="mr-1" /> {office.hours}
+              </div>
+            </div>
+          ))}
+          <div className="pt-2 mt-2 border-t border-white/20 text-sm flex items-center">
+            <PhoneOutlined className="mr-2 text-yellow-400" /> 24/7 Support: +86 400 123 4567
+          </div>
+        </div>
 
-        <Button icon={<LoginOutlined />} type="text" className="mt-4 text-[#0F3952] text-lg">
-          Login
-        </Button>
+        <Menu mode="inline" items={menuItems} onClick={handleMenuClick} className="border-none" />
       </Drawer>
+
+      {/* Dark Overlay */}
+      {drawerVisible && <div onClick={() => setDrawerVisible(false)} className="fixed inset-0 bg-black/50 z-40" />}
     </header>
   );
 };

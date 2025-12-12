@@ -1,77 +1,66 @@
-// src/pages/Login.tsx
 import React, { useState } from "react";
-import { Form, Input, Button, message } from "antd";
+import { Form, Input, Button, message, Checkbox } from "antd";
 import { useNavigate } from "react-router-dom";
 import AuthLayout from "../components/BackgroundLayout";
 
-// Complete mock users list
 const MOCK_USERS = [
   { email: "buyer@example.com", password: "password123", role: "buyer" },
-  { email: "supplier@example.com", password: "password123", role: "supplier" },
   { email: "admin@example.com", password: "password123", role: "admin" },
-  { email: "superadmin@example.com", password: "password123", role: "super-admin" },
-  { email: "logistics@example.com", password: "password123", role: "logistics" },
-  { email: "student@example.com", password: "password123", role: "student" },
 ];
 
 interface LoginProps {
   setRole: (role: string) => void;
 }
 
+interface LoginFormValues {
+  email: string;
+  password: string;
+  remember?: boolean;
+}
+
 const Login: React.FC<LoginProps> = ({ setRole }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: LoginFormValues) => {
     setLoading(true);
 
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 900));
+    await new Promise((resolve) => setTimeout(resolve, 800));
 
-      const user = MOCK_USERS.find(
-        (u) => u.email === values.email && u.password === values.password
-      );
+    const user = MOCK_USERS.find(
+      (u) => u.email === values.email && u.password === values.password
+    );
 
-      if (!user) {
-        message.error("Invalid email or password");
-        return;
-      }
-
-      // Save token and role
-      localStorage.setItem("token", "mock-token");
-      localStorage.setItem("role", user.role);
-      setRole(user.role);
-
-      message.success(`Welcome, ${user.role}!`);
-
-      // Role-based navigation
-      switch (user.role) {
-        case "admin":
-          navigate("/admin/dashboard");
-          break;
-        case "student":
-          navigate("/student/dashboard");
-          break;
-        case "super-admin":
-          navigate("/superadmin/dashboard");
-          break;
-        case "supplier":
-          navigate("/supplier/dashboard");
-          break;
-        case "buyer":
-          navigate("/buyer/dashboard");
-          break;
-        case "logistics":
-          navigate("/logistics/dashboard");
-          break;
-        default:
-          navigate("/dashboard");
-      }
-    } catch (error) {
-      message.error("Login failed");
-    } finally {
+    if (!user) {
+      message.error("Invalid email or password");
       setLoading(false);
+      return;
     }
+
+    // Save role based on "Remember Me"
+    if (values.remember) {
+      localStorage.setItem("role", user.role);
+    } else {
+      sessionStorage.setItem("role", user.role);
+    }
+
+    setRole(user.role);
+    message.success("Login successful! Redirecting...");
+
+    // Redirect based on role
+    switch (user.role) {
+      case "admin":
+        navigate("/admin/dashboard");
+        break;
+      case "buyer":
+        navigate("/buyer/dashboard");
+        break;
+      default:
+        navigate("/dashboard");
+        break;
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -81,7 +70,7 @@ const Login: React.FC<LoginProps> = ({ setRole }) => {
           Login
         </h2>
 
-        <Form layout="vertical" onFinish={onFinish}>
+        <Form<LoginFormValues> layout="vertical" onFinish={onFinish}>
           <Form.Item
             name="email"
             label="Email"
@@ -97,6 +86,19 @@ const Login: React.FC<LoginProps> = ({ setRole }) => {
           >
             <Input.Password className="focus:border-[#FFD700] focus:ring-[#FFD700]" />
           </Form.Item>
+
+          <Form.Item name="remember" valuePropName="checked">
+            <Checkbox className="text-sm text-[#0F3952]">Remember Me</Checkbox>
+          </Form.Item>
+
+          <div className="flex justify-between mb-4 text-sm">
+            <span
+              onClick={() => navigate("/forgot-password")}
+              className="text-[#0F3952] cursor-pointer hover:underline"
+            >
+              Forgot Password?
+            </span>
+          </div>
 
           <Form.Item>
             <Button

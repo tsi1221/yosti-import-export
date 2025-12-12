@@ -1,6 +1,5 @@
-// src/pages/Register.tsx
 import React, { useState } from "react";
-import { Form, Input, Button, Select } from "antd";
+import { Form, Input, Button, Select, Checkbox, message } from "antd";
 import { Link } from "react-router-dom";
 import AuthLayout from "../components/BackgroundLayout";
 
@@ -10,21 +9,24 @@ const Register: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = (values: any) => {
+    if (!values.terms) {
+      message.error("You must accept the Terms & Conditions");
+      return;
+    }
+
     setLoading(true);
     console.log("Form Values:", values);
-    // Here you can handle the form locally or pass it to a parent component
-    setTimeout(() => setLoading(false), 1000); // Simulate loading
+    // TODO: handle form submission to backend
+    setTimeout(() => setLoading(false), 1000); // simulate loading
   };
 
   return (
     <AuthLayout>
-      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
-        {/* Title */}
-        <h2 className="text-3xl font-extrabold text-center mb-6" style={{ color: "#0F3952" }}>
+      <div className="w-full max-w-lg mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-gray-100">
+        <h2 className="text-3xl font-extrabold text-center mb-6 text-[#0F3952]">
           Create Your Account
         </h2>
 
-        {/* Form */}
         <Form layout="vertical" onFinish={handleSubmit} requiredMark={false}>
           <Form.Item
             name="full_name"
@@ -41,18 +43,14 @@ const Register: React.FC = () => {
           <Form.Item
             name="country"
             label="Country"
-            rules={[{ required: true, message: "Please select a country" }]}
+            rules={[{ required: true, message: "Please enter your country" }]}
           >
-            <Select placeholder="Choose your country" size="large">
-              <Option value="Ethiopia">Ethiopia</Option>
-              <Option value="China">China</Option>
-              <Option value="Uganda">Uganda</Option>
-            </Select>
+            <Input placeholder="Enter your country" size="large" />
           </Form.Item>
 
           <Form.Item
             name="phone"
-            label="Phone"
+            label="Phone / WhatsApp"
             rules={[{ required: true, message: "Phone number is required" }]}
           >
             <Input placeholder="+251 9xxxxxxx" size="large" />
@@ -72,37 +70,51 @@ const Register: React.FC = () => {
           <Form.Item
             name="password"
             label="Password"
-            rules={[{ required: true, message: "Password is required" }, { min: 6 }]}
+            rules={[
+              { required: true, message: "Password is required" },
+              { min: 6, message: "Password must be at least 6 characters" },
+            ]}
           >
             <Input.Password size="large" />
           </Form.Item>
 
-          <Form.Item
-            name="account_type"
-            label="Account Type"
-            rules={[{ required: true, message: "Select an account type" }]}
-          >
-            <Select placeholder="Choose user role" size="large">
-              <Option value="individual">Individual</Option>
-              <Option value="business">Business / Buyer</Option>
-              <Option value="supplier">Supplier</Option>
-              <Option value="logistics">Logistics</Option>
-              <Option value="admin">Admin</Option>
-            </Select>
-          </Form.Item>
+          <div className="grid sm:grid-cols-2 sm:gap-4">
+            <Form.Item
+              name="account_type"
+              label="Account Type"
+              rules={[{ required: true, message: "Select an account type" }]}
+            >
+              <Select placeholder="Choose account type" size="large">
+                <Option value="buyer">Buyer</Option>
+                <Option value="supplier">Supplier</Option>
+                <Option value="logistics">Logistics</Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item
+              name="language_preference"
+              label="Language Preference"
+              rules={[{ required: true, message: "Choose a language" }]}
+            >
+              <Select size="large">
+                <Option value="en">English</Option>
+                <Option value="am">Amharic</Option>
+                <Option value="om">Oromiffa</Option>
+                <Option value="cn">Chinese</Option>
+              </Select>
+            </Form.Item>
+          </div>
 
           <Form.Item
-            name="language_preference"
-            label="Language Preference"
-            rules={[{ required: true, message: "Choose a language" }]}
+            name="terms"
+            valuePropName="checked"
+            rules={[{ required: true, message: "You must accept the Terms & Conditions" }]}
           >
-            <Select size="large">
-              <Option value="en">English</Option>
-              <Option value="am">Amharic</Option>
-            </Select>
+            <Checkbox>
+              I agree to the <Link to="/terms">Terms & Conditions</Link>
+            </Checkbox>
           </Form.Item>
 
-          {/* Button */}
           <Form.Item>
             <Button
               type="primary"
@@ -121,10 +133,12 @@ const Register: React.FC = () => {
           </Form.Item>
         </Form>
 
-        {/* Footer */}
         <p className="text-center mt-4 text-gray-700">
           Already have an account?{" "}
-          <Link to="/login" style={{ color: "#0F3952" }} className="font-semibold hover:underline">
+          <Link
+            to="/login"
+            className="font-semibold text-[#0F3952] hover:underline"
+          >
             Login
           </Link>
         </p>
