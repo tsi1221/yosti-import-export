@@ -1,24 +1,30 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Form, Input, Button, message, Checkbox } from "antd";
 import { useNavigate } from "react-router-dom";
 import AuthLayout from "../components/BackgroundLayout";
+import type { Role } from "../components/Sidebar";
 
-const MOCK_USERS = [
+/* ================= MOCK USERS ================= */
+const MOCK_USERS: { email: string; password: string; role: Role }[] = [
   { email: "buyer@example.com", password: "password123", role: "buyer" },
   { email: "admin@example.com", password: "password123", role: "admin" },
 ];
 
+/* ================= PROPS ================= */
 interface LoginProps {
-  setRole: (role: string) => void;
+  setRole: (role: Role | null) => void;
+  setEmail: (email: string | null) => void; // added
 }
 
+/* ================= FORM VALUES ================= */
 interface LoginFormValues {
   email: string;
   password: string;
   remember?: boolean;
 }
 
-const Login: React.FC<LoginProps> = ({ setRole }) => {
+/* ================= COMPONENT ================= */
+const Login: React.FC<LoginProps> = ({ setRole, setEmail }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -37,28 +43,22 @@ const Login: React.FC<LoginProps> = ({ setRole }) => {
       return;
     }
 
-    // Save role based on "Remember Me"
+    // Save role and email
     if (values.remember) {
       localStorage.setItem("role", user.role);
+      localStorage.setItem("email", user.email);
     } else {
       sessionStorage.setItem("role", user.role);
+      sessionStorage.setItem("email", user.email);
     }
 
     setRole(user.role);
-    message.success("Login successful! Redirecting...");
+    setEmail(user.email); // set email in state
 
-    // Redirect based on role
-    switch (user.role) {
-      case "admin":
-        navigate("/admin/dashboard");
-        break;
-      case "buyer":
-        navigate("/buyer/dashboard");
-        break;
-      default:
-        navigate("/dashboard");
-        break;
-    }
+    message.success("Login successful!");
+
+    // Redirect
+    navigate(`/${user.role}/dashboard`, { replace: true });
 
     setLoading(false);
   };
@@ -74,9 +74,12 @@ const Login: React.FC<LoginProps> = ({ setRole }) => {
           <Form.Item
             name="email"
             label="Email"
-            rules={[{ required: true, type: "email", message: "Enter a valid email" }]}
+            rules={[
+              { required: true, message: "Email is required" },
+              { type: "email", message: "Enter a valid email" },
+            ]}
           >
-            <Input className="focus:border-[#FFD700] focus:ring-[#FFD700]" />
+            <Input />
           </Form.Item>
 
           <Form.Item
@@ -84,11 +87,11 @@ const Login: React.FC<LoginProps> = ({ setRole }) => {
             label="Password"
             rules={[{ required: true, message: "Enter your password" }]}
           >
-            <Input.Password className="focus:border-[#FFD700] focus:ring-[#FFD700]" />
+            <Input.Password />
           </Form.Item>
 
           <Form.Item name="remember" valuePropName="checked">
-            <Checkbox className="text-sm text-[#0F3952]">Remember Me</Checkbox>
+            <Checkbox>Remember Me</Checkbox>
           </Form.Item>
 
           <div className="flex justify-between mb-4 text-sm">
@@ -106,14 +109,14 @@ const Login: React.FC<LoginProps> = ({ setRole }) => {
               htmlType="submit"
               block
               loading={loading}
-              className="!bg-[#0F3952] border-2 border-[#FFD700] text-[#FFD700] hover:bg-[#0b2c3e] transition-all duration-300"
+              className="!bg-[#0F3952]"
             >
               Login
             </Button>
           </Form.Item>
         </Form>
 
-        <p className="text-center text-black mt-4">
+        <p className="text-center mt-4">
           Don’t have an account?{" "}
           <span
             onClick={() => navigate("/register")}

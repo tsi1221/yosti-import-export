@@ -1,14 +1,28 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Form, Input, Button, Select, Checkbox, message } from "antd";
 import { Link } from "react-router-dom";
 import AuthLayout from "../components/BackgroundLayout";
 
 const { Option } = Select;
 
-const Register: React.FC = () => {
+/* ✅ Form values type */
+interface RegisterFormValues {
+  full_name: string;
+  company_name?: string;
+  country: string;
+  phone: string;
+  email: string;
+  password: string;
+  account_type: "buyer" | "supplier" | "logistics";
+  language_preference: "en" | "am" | "om" | "cn";
+  terms: boolean;
+}
+
+const Register = () => {
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (values: any) => {
+  /* ✅ Correctly typed submit handler */
+  const handleSubmit = (values: RegisterFormValues) => {
     if (!values.terms) {
       message.error("You must accept the Terms & Conditions");
       return;
@@ -16,8 +30,9 @@ const Register: React.FC = () => {
 
     setLoading(true);
     console.log("Form Values:", values);
-    // TODO: handle form submission to backend
-    setTimeout(() => setLoading(false), 1000); // simulate loading
+
+    // TODO: send values to backend
+    setTimeout(() => setLoading(false), 1000);
   };
 
   return (
@@ -27,17 +42,21 @@ const Register: React.FC = () => {
           Create Your Account
         </h2>
 
-        <Form layout="vertical" onFinish={handleSubmit} requiredMark={false}>
+        <Form<RegisterFormValues>
+          layout="vertical"
+          onFinish={handleSubmit}
+          requiredMark={false}
+        >
           <Form.Item
             name="full_name"
             label="Full Name"
             rules={[{ required: true, message: "Full name is required" }]}
           >
-            <Input placeholder="John Doe" size="large" />
+            <Input size="large" />
           </Form.Item>
 
           <Form.Item name="company_name" label="Company Name (optional)">
-            <Input placeholder="Optional if you're an individual" size="large" />
+            <Input size="large" />
           </Form.Item>
 
           <Form.Item
@@ -45,7 +64,7 @@ const Register: React.FC = () => {
             label="Country"
             rules={[{ required: true, message: "Please enter your country" }]}
           >
-            <Input placeholder="Enter your country" size="large" />
+            <Input size="large" />
           </Form.Item>
 
           <Form.Item
@@ -53,7 +72,7 @@ const Register: React.FC = () => {
             label="Phone / WhatsApp"
             rules={[{ required: true, message: "Phone number is required" }]}
           >
-            <Input placeholder="+251 9xxxxxxx" size="large" />
+            <Input size="large" />
           </Form.Item>
 
           <Form.Item
@@ -64,7 +83,7 @@ const Register: React.FC = () => {
               { type: "email", message: "Enter a valid email" },
             ]}
           >
-            <Input placeholder="example@email.com" size="large" />
+            <Input size="large" />
           </Form.Item>
 
           <Form.Item
@@ -84,7 +103,7 @@ const Register: React.FC = () => {
               label="Account Type"
               rules={[{ required: true, message: "Select an account type" }]}
             >
-              <Select placeholder="Choose account type" size="large">
+              <Select size="large">
                 <Option value="buyer">Buyer</Option>
                 <Option value="supplier">Supplier</Option>
                 <Option value="logistics">Logistics</Option>
@@ -108,7 +127,7 @@ const Register: React.FC = () => {
           <Form.Item
             name="terms"
             valuePropName="checked"
-            rules={[{ required: true, message: "You must accept the Terms & Conditions" }]}
+            rules={[{ required: true, message: "Accept the Terms & Conditions" }]}
           >
             <Checkbox>
               I agree to the <Link to="/terms">Terms & Conditions</Link>
@@ -135,10 +154,7 @@ const Register: React.FC = () => {
 
         <p className="text-center mt-4 text-gray-700">
           Already have an account?{" "}
-          <Link
-            to="/login"
-            className="font-semibold text-[#0F3952] hover:underline"
-          >
+          <Link to="/login" className="font-semibold text-[#0F3952] hover:underline">
             Login
           </Link>
         </p>

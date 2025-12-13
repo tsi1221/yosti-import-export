@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Table, Tag, Button, Drawer, Form, Select, Input, Space, message, Popconfirm } from "antd";
 import { EditOutlined, DeleteOutlined, EyeOutlined, CheckOutlined, CloseOutlined, SaveOutlined } from "@ant-design/icons";
 
@@ -59,6 +59,7 @@ const Payments: React.FC = () => {
       setSelectedPayment(null);
       form.resetFields();
     } catch (err) {
+      console.error(err);
       message.error("Failed to update payment");
     } finally {
       setLoading(false);
@@ -66,16 +67,16 @@ const Payments: React.FC = () => {
   };
 
   const columns = [
-    { title: "User ID", dataIndex: "user_id", key: "user_id", render: text => <b>{text}</b> },
+    // { title: "User ID", dataIndex: "user_id", key: "user_id", render: text => <b>{text}</b> },
     { title: "Service", dataIndex: "service_type", key: "service_type" },
     { title: "Amount", dataIndex: "amount", key: "amount", render: (amount: number, record: Payment) => `${amount} ${record.currency}` },
     { title: "Payment Method", dataIndex: "payment_method", key: "payment_method" },
     { title: "Status", dataIndex: "status", key: "status", render: (status: string) => <Tag color={status === "completed" ? "green" : status === "pending" ? "orange" : "red"}>{status.toUpperCase()}</Tag> },
-    { title: "After Sales", dataIndex: "after_sales", key: "after_sales", render: text => text ? text.charAt(0).toUpperCase() + text.slice(1) : "N/A" },
+    // { title: "After Sales", dataIndex: "after_sales", key: "after_sales", render: text => text ? text.charAt(0).toUpperCase() + text.slice(1) : "N/A" },
     {
       title: "Actions",
       key: "actions",
-      render: (_: any, record: Payment) => (
+      render: (_:    unknown             , record: Payment) => (
         <Space>
           <Button type="default" style={{ borderColor: "#0F3952", color: "#0F3952" }} icon={<EyeOutlined />} onClick={() => openDrawer(record, "view")}>View</Button>
           <Button type="default" style={{ borderColor: "#0F3952", color: "#0F3952" }} icon={<EditOutlined />} onClick={() => openDrawer(record, "edit")}>Edit</Button>

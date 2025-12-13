@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import  type  { ReactNode } from "react";
 import { HomeOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import yostiLogo from "../assets/yostilogo.png";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Table, Tag, Drawer, Form, Input, Select, Button, Space, message } from "antd";
 import { EyeOutlined, EditOutlined, CloseOutlined, SaveOutlined } from "@ant-design/icons";
 
@@ -150,7 +150,7 @@ const SupportTable: React.FC = () => {
     {
       title: "Action",
       key: "action",
-      render: (_: any, record: SupportTicket) => (
+      render: (_: unknown, record: SupportTicket) => (
         <Space>
           <Button type="link" icon={<EyeOutlined />} onClick={() => handleView(record)}>
             View

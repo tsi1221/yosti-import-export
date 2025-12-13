@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   Tag,
@@ -81,14 +81,12 @@ const SourcingDashboard: React.FC = () => {
     const values = await form.validateFields();
 
     if (editingRequest) {
-      // Update existing request
       setRequests((prev) =>
         prev.map((r) =>
           r.request_id === editingRequest.request_id ? { ...r, ...values } : r
         )
       );
     } else {
-      // Add new request
       const newRequest: SourcingRequest = {
         request_id: "REQ" + (requests.length + 1),
         status: "open",
@@ -128,7 +126,7 @@ const SourcingDashboard: React.FC = () => {
     },
     {
       title: "Action",
-      render: (_: any, record: SourcingRequest) => (
+      render: (_: unknown, record: SourcingRequest) => (
         <Button
           type="link"
           icon={<EyeOutlined />}
@@ -146,7 +144,6 @@ const SourcingDashboard: React.FC = () => {
         Sourcing Requests
       </h2>
 
-      {/* SEARCH & FILTER */}
       <Row gutter={16} style={{ marginBottom: 20 }}>
         <Col span={8}>
           <Input
@@ -191,7 +188,6 @@ const SourcingDashboard: React.FC = () => {
         </Col>
       </Row>
 
-      {/* TABLE */}
       <Table
         dataSource={filteredData}
         columns={columns}
@@ -200,7 +196,6 @@ const SourcingDashboard: React.FC = () => {
         pagination={{ pageSize: 10, position: ["bottomRight"] }}
       />
 
-      {/* DRAWER */}
       <Drawer
         title={viewMode ? "Request Details" : editingRequest ? "Edit Request" : "Add Request"}
         open={drawerVisible}

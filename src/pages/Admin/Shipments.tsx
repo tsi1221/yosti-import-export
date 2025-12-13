@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Table, Drawer, Button, Space, Tag, Input, Select, Form, InputNumber, DatePicker } from "antd";
 import { EyeOutlined, UserSwitchOutlined, PlusOutlined } from "@ant-design/icons";
 
@@ -73,7 +73,7 @@ const Shipments: React.FC = () => {
   const columns = [
     { title: "User ID", dataIndex: "user_id" },
     { title: "Tracking #", dataIndex: "tracking_number" },
-    { title: "Destination", render: (_: any, r: Shipment) => `${r.destination_city}, ${r.destination_country}` },
+    { title: "Destination", render: (_:  unknown       , r: Shipment) => `${r.destination_city}, ${r.destination_country}` },
     { title: "Method", dataIndex: "shipping_method", render: (m: string) => m.charAt(0).toUpperCase() + m.slice(1) },
     {
       title: "Status",
@@ -86,7 +86,7 @@ const Shipments: React.FC = () => {
     { title: "Assigned Logistic", dataIndex: "assigned_logistic", render: (l: string) => l || <Tag>Not Assigned</Tag> },
     {
       title: "Action",
-      render: (_: any, record: Shipment) => (
+      render: (_: unknown, record: Shipment) => (
         <Space>
           <Button onClick={() => openDrawer("view", record)} icon={<EyeOutlined />}>View</Button>
           <Button onClick={() => openDrawer("assign", record)} icon={<UserSwitchOutlined />}>Assign</Button>

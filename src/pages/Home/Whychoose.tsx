@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { PlusOutlined, MinusOutlined, CheckCircleFilled } from '@ant-design/icons';
 import { motion, AnimatePresence } from 'framer-motion';
 

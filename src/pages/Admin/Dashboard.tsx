@@ -1,7 +1,6 @@
-// src/pages/AdminDashboard.tsx
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Row, Col, Card, Table, Button, Drawer, Form, Input, Switch, Tag } from "antd";
-import { EditOutlined, EyeOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 
 const { Column, ColumnGroup } = Table;
 
@@ -41,26 +40,24 @@ interface DashboardCardProps {
   color?: string;
 }
 
-const DashboardCard: React.FC<DashboardCardProps> = ({ title, value, color = "#0F3952" }) => {
-  return (
-    <Card
-      style={{
-        borderRadius: 16,
-        boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
-        minHeight: 120,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-        borderLeft: `6px solid ${color}`,
-        textAlign: "center",
-      }}
-    >
-      <h3 style={{ margin: 0, fontSize: 16, color: "#555", fontWeight: 600 }}>{title}</h3>
-      <p style={{ margin: 0, fontSize: 28, fontWeight: 700, color: "#0F3952" }}>{value}</p>
-    </Card>
-  );
-};
+const DashboardCard: React.FC<DashboardCardProps> = ({ title, value, color = "#0F3952" }) => (
+  <Card
+    style={{
+      borderRadius: 16,
+      boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
+      minHeight: 120,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      flexDirection: "column",
+      borderLeft: `6px solid ${color}`,
+      textAlign: "center",
+    }}
+  >
+    <h3 style={{ margin: 0, fontSize: 16, color: "#555", fontWeight: 600 }}>{title}</h3>
+    <p style={{ margin: 0, fontSize: 28, fontWeight: 700, color: "#0F3952" }}>{value}</p>
+  </Card>
+);
 
 // ------------------- Main Dashboard -------------------
 const AdminDashboard: React.FC = () => {
@@ -78,6 +75,7 @@ const AdminDashboard: React.FC = () => {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [editingSupplier, setEditingSupplier] = useState<Supplier | null>(null);
   const [viewMode, setViewMode] = useState(false);
+
   const [form] = Form.useForm();
 
   const buttonStyle = (active: boolean) => ({
@@ -92,73 +90,20 @@ const AdminDashboard: React.FC = () => {
   });
 
   useEffect(() => {
-    // ------------------- USERS MOCK (unchanged) -------------------
     const mockUsers: User[] = [
-      {
-        _id: "1",
-        fullName: "Chen Supplier",
-        companyName: "Chen Co.",
-        country: "China",
-        phone: "444555666",
-        email: "suppliers@example.com",
-        accountType: "supplier",
-        languagePreference: "en"
-      },
-      {
-        _id: "2",
-        fullName: "Alice Buyer",
-        companyName: "",
-        country: "USA",
-        phone: "123456789",
-        email: "alice@example.com",
-        accountType: "buyer",
-        languagePreference: "en"
-      }
+      { _id: "1", fullName: "Chen Supplier", companyName: "Chen Co.", country: "China", phone: "444555666", email: "suppliers@example.com", accountType: "supplier", languagePreference: "en" },
+      { _id: "2", fullName: "Alice Buyer", companyName: "", country: "USA", phone: "123456789", email: "alice@example.com", accountType: "buyer", languagePreference: "en" },
     ];
 
-    // ------------------- SUPPLIERS MOCK (4 entries) -------------------
     const mockSuppliers: Supplier[] = [
-      {
-        _id: "101",
-        name: "Global Supplies",
-        verified: true,
-        contactPerson: "John Doe",
-        phone: "+123456789",
-        email: "contact@globalsupplies.com",
-        locationCity: "New York"
-      },
-      {
-        _id: "102",
-        name: "Quality Traders",
-        verified: false,
-        contactPerson: "Jane Roe",
-        phone: "+987654321",
-        email: "info@qualitytraders.com",
-        locationCity: "London"
-      },
-      {
-        _id: "103",
-        name: "Asia Importers",
-        verified: true,
-        contactPerson: "Liu Wei",
-        phone: "+55 123 9988",
-        email: "asia@importers.cn",
-        locationCity: "Shanghai"
-      },
-      {
-        _id: "104",
-        name: "Africa Wholesale",
-        verified: false,
-        contactPerson: "Samuel K.",
-        phone: "+251900123456",
-        email: "wholesale@africa.com",
-        locationCity: "Addis Ababa"
-      }
+      { _id: "101", name: "Global Supplies", verified: true, contactPerson: "John Doe", phone: "+123456789", email: "contact@globalsupplies.com", locationCity: "New York" },
+      { _id: "102", name: "Quality Traders", verified: false, contactPerson: "Jane Roe", phone: "+987654321", email: "info@qualitytraders.com", locationCity: "London" },
+      { _id: "103", name: "Asia Importers", verified: true, contactPerson: "Liu Wei", phone: "+55 123 9988", email: "asia@importers.cn", locationCity: "Shanghai" },
+      { _id: "104", name: "Africa Wholesale", verified: false, contactPerson: "Samuel K.", phone: "+251900123456", email: "wholesale@africa.com", locationCity: "Addis Ababa" },
     ];
 
     setUsers(mockUsers);
     setSuppliers(mockSuppliers);
-
     setStats({
       totalUsers: mockUsers.length,
       totalSuppliers: mockSuppliers.length,
@@ -167,17 +112,17 @@ const AdminDashboard: React.FC = () => {
     });
   }, []);
 
-  const openDrawer = (type: "user" | "supplier", record: any, view: boolean = false) => {
+  // ------------------- Drawer Open -------------------
+  const openDrawer = (type: "user" | "supplier", record: User | Supplier, view: boolean = false) => {
     setViewMode(view);
     if (type === "user") {
-      setEditingUser(record);
-      form.setFieldsValue(record);
+      setEditingUser(record as User);
       setEditingSupplier(null);
     } else {
-      setEditingSupplier(record);
-      form.setFieldsValue(record);
+      setEditingSupplier(record as Supplier);
       setEditingUser(null);
     }
+    form.setFieldsValue(record);
     setDrawerVisible(true);
   };
 
@@ -197,67 +142,43 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <div style={{ padding: "30px" }}>
-      <h1 style={{ color: "#0F3952", fontSize: 28, fontWeight: 700, marginBottom: 24 }}>
-        Admin Dashboard
-      </h1>
+      <h1 style={{ color: "#0F3952", fontSize: 28, fontWeight: 700, marginBottom: 24 }}>Admin Dashboard</h1>
 
       {/* Dashboard Cards */}
       <Row gutter={[20, 20]}>
-        <Col xs={24} sm={12} md={6}>
-          <DashboardCard title="Total Users" value={stats.totalUsers} color="#0F3952" />
-        </Col>
-
-        <Col xs={24} sm={12} md={6}>
-          <DashboardCard title="Total Suppliers" value={stats.totalSuppliers} color="#E4BD3B" />
-        </Col>
-
-        <Col xs={24} sm={12} md={6}>
-          <DashboardCard title="Verifications" value={stats.verifications} color="#4CAF50" />
-        </Col>
-
-        <Col xs={24} sm={12} md={6}>
-          <DashboardCard title="Total Payments" value={`$${stats.totalPayments}`} color="#FF5722" />
-        </Col>
+        <Col xs={24} sm={12} md={6}><DashboardCard title="Total Users" value={stats.totalUsers} color="#0F3952" /></Col>
+        <Col xs={24} sm={12} md={6}><DashboardCard title="Total Suppliers" value={stats.totalSuppliers} color="#E4BD3B" /></Col>
+        <Col xs={24} sm={12} md={6}><DashboardCard title="Verifications" value={stats.verifications} color="#4CAF50" /></Col>
+        <Col xs={24} sm={12} md={6}><DashboardCard title="Total Payments" value={`$${stats.totalPayments}`} color="#FF5722" /></Col>
       </Row>
 
-      {/* Tab Buttons */}
+      {/* Tabs */}
       <div style={{ display: "flex", gap: 6, margin: "20px 0" }}>
-        <button style={buttonStyle(activeTab === "users")} onClick={() => setActiveTab("users")}>
-          All Users
-        </button>
-        <button style={buttonStyle(activeTab === "suppliers")} onClick={() => setActiveTab("suppliers")}>
-          All Suppliers
-        </button>
+        <button style={buttonStyle(activeTab === "users")} onClick={() => setActiveTab("users")}>All Users</button>
+        <button style={buttonStyle(activeTab === "suppliers")} onClick={() => setActiveTab("suppliers")}>All Suppliers</button>
       </div>
 
       {/* Users Table */}
       {activeTab === "users" && (
         <Card style={{ borderRadius: 12, boxShadow: "0 4px 12px rgba(0,0,0,0.05)" }}>
-          <Table
-            dataSource={users}
-            rowKey="_id"
-            bordered
-            pagination={{ position: ["bottomRight"] }}
-          >
+          <Table<User> dataSource={users} rowKey="_id" bordered pagination={{ position: ["bottomRight"] }}>
             <ColumnGroup title="User Info">
-              <Column title="Full Name" dataIndex="fullName" />
-              <Column title="Company" dataIndex="companyName" />
-              <Column title="Email" dataIndex="email" />
-              <Column title="Phone" dataIndex="phone" />
-              <Column title="Country" dataIndex="country" />
-              <Column title="Type" dataIndex="accountType" />
-              <Column title="Language" dataIndex="languagePreference" />
+              <Column title="Full Name" dataIndex="fullName" key="fullName" />
+              <Column title="Company" dataIndex="companyName" key="companyName" />
+              <Column title="Email" dataIndex="email" key="email" />
+              <Column title="Phone" dataIndex="phone" key="phone" />
+              <Column title="Country" dataIndex="country" key="country" />
+              <Column title="Type" dataIndex="accountType" key="accountType" />
+              <Column title="Language" dataIndex="languagePreference" key="languagePreference" />
             </ColumnGroup>
-
             <Column
               title="Actions"
-              render={(_: any, record: User) => (
+              key="actions"
+              render={(_: User, record: User) => (
                 <div style={{ display: "flex", gap: 6 }}>
                   <Button icon={<EyeOutlined />} size="small" onClick={() => openDrawer("user", record, true)} />
                   <Button icon={<EditOutlined />} size="small" onClick={() => openDrawer("user", record)} />
-                  <Button danger size="small" onClick={() => handleDelete("user", record._id)}>
-                    Delete
-                  </Button>
+                  <Button danger size="small" onClick={() => handleDelete("user", record._id)}>Delete</Button>
                 </div>
               )}
             />
@@ -268,34 +189,26 @@ const AdminDashboard: React.FC = () => {
       {/* Suppliers Table */}
       {activeTab === "suppliers" && (
         <Card style={{ borderRadius: 12, boxShadow: "0 4px 12px rgba(0,0,0,0.05)" }}>
-          <Table
-            dataSource={suppliers}
-            rowKey="_id"
-            bordered
-            pagination={{ position: ["bottomRight"] }}
-          >
-            <Column title="Company" dataIndex="name" />
-            <Column title="Contact Person" dataIndex="contactPerson" />
-            <Column title="Phone" dataIndex="phone" />
-            <Column title="Email" dataIndex="email" />
-            <Column title="City" dataIndex="locationCity" />
+          <Table<Supplier> dataSource={suppliers} rowKey="_id" bordered pagination={{ position: ["bottomRight"] }}>
+            <Column title="Company" dataIndex="name" key="name" />
+            <Column title="Contact Person" dataIndex="contactPerson" key="contactPerson" />
+            <Column title="Phone" dataIndex="phone" key="phone" />
+            <Column title="Email" dataIndex="email" key="email" />
+            <Column title="City" dataIndex="locationCity" key="locationCity" />
             <Column
               title="Verified"
               dataIndex="verified"
-              render={(v: boolean) => (
-                <Tag color={v ? "green" : "orange"}>{v ? "Yes" : "Pending"}</Tag>
-              )}
+              key="verified"
+              render={(v: boolean) => <Tag color={v ? "green" : "orange"}>{v ? "Yes" : "Pending"}</Tag>}
             />
-
             <Column
               title="Actions"
-              render={(_: any, record: Supplier) => (
+              key="actions"
+              render={(_: Supplier, record: Supplier) => (
                 <div style={{ display: "flex", gap: 6 }}>
                   <Button icon={<EyeOutlined />} size="small" onClick={() => openDrawer("supplier", record, true)} />
                   <Button icon={<EditOutlined />} size="small" onClick={() => openDrawer("supplier", record)} />
-                  <Button danger size="small" onClick={() => handleDelete("supplier", record._id)}>
-                    Delete
-                  </Button>
+                  <Button danger size="small" onClick={() => handleDelete("supplier", record._id)}>Delete</Button>
                 </div>
               )}
             />
@@ -310,11 +223,7 @@ const AdminDashboard: React.FC = () => {
         onClose={() => setDrawerVisible(false)}
         open={drawerVisible}
         footer={
-          !viewMode && (
-            <Button type="primary" onClick={handleSave} style={{ backgroundColor: "#0F3952", color: "#fff" }}>
-              Update
-            </Button>
-          )
+          !viewMode && <Button type="primary" onClick={handleSave} style={{ backgroundColor: "#0F3952", color: "#fff" }}>Update</Button>
         }
       >
         <Form form={form} layout="vertical">
@@ -329,7 +238,6 @@ const AdminDashboard: React.FC = () => {
               <Form.Item name="languagePreference" label="Language"><Input disabled={viewMode} /></Form.Item>
             </>
           )}
-
           {editingSupplier && (
             <>
               <Form.Item name="name" label="Company"><Input disabled={viewMode} /></Form.Item>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Menu, Button, Drawer, Dropdown, Space, Tooltip } from "antd";
 import {
   LoginOutlined,

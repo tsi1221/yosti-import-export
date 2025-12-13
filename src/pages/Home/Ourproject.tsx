@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 ;

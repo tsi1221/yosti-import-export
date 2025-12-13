@@ -1,5 +1,5 @@
 // src/pages/Blogs.tsx
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   Button,
@@ -9,12 +9,10 @@ import {
   Tag,
   Switch,
   Space,
-  Tooltip,
 } from "antd";
 import {
   EyeOutlined,
   EditOutlined,
-  DeleteOutlined,
   SaveOutlined,
   CloseOutlined,
   PlusOutlined,
@@ -109,14 +107,19 @@ const Blogs: React.FC = () => {
     ]);
   }, []);
 
-  const openDrawer = (type: "blog" | "testimonial", record: any = null, view = false) => {
+  // ---------- FIXED openDrawer ----------
+  const openDrawer = (
+    type: "blog" | "testimonial",
+    record?: BlogPost | Testimonial | null,
+    view: boolean = false
+  ) => {
     setViewMode(view);
 
     if (type === "blog") {
-      setEditingBlog(record);
+      setEditingBlog((record as BlogPost) || null);
       setEditingTestimonial(null);
     } else {
-      setEditingTestimonial(record);
+      setEditingTestimonial((record as Testimonial) || null);
       setEditingBlog(null);
     }
 
@@ -181,7 +184,7 @@ const Blogs: React.FC = () => {
     { title: "Author", dataIndex: "author_id" },
     {
       title: "Action",
-      render: (_: any, record: BlogPost) => (
+      render: (_:       unknown      , record: BlogPost) => (
         <Space>
           <Button
             icon={<EyeOutlined />}
@@ -207,7 +210,7 @@ const Blogs: React.FC = () => {
     },
     {
       title: "Action",
-      render: (_: any, record: Testimonial) => (
+      render: (_:   unknown   , record: Testimonial) => (
         <Space>
           <Button
             icon={<EyeOutlined />}
@@ -252,14 +255,13 @@ const Blogs: React.FC = () => {
         </button>
       </div>
 
-      {/* ADD BUTTONS RIGHT SIDE */}
       <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20 }}>
         {activeTab === "blogs" && (
           <Button
             type="primary"
             icon={<PlusOutlined />}
             style={{ background: "#0F3952" }}
-            onClick={() => openDrawer("blog", {})}
+            onClick={() => openDrawer("blog")}
           >
             Add Blog
           </Button>
@@ -270,7 +272,7 @@ const Blogs: React.FC = () => {
             type="primary"
             icon={<PlusOutlined />}
             style={{ background: "#0F3952" }}
-            onClick={() => openDrawer("testimonial", {})}
+            onClick={() => openDrawer("testimonial")}
           >
             Add Testimony
           </Button>
@@ -321,7 +323,7 @@ const Blogs: React.FC = () => {
         }
       >
         <Form layout="vertical" form={form}>
-          {editingBlog !== null && (
+          {editingBlog && (
             <>
               <Form.Item name="title" label="Title">
                 <Input disabled={viewMode} />
@@ -338,7 +340,7 @@ const Blogs: React.FC = () => {
             </>
           )}
 
-          {editingTestimonial !== null && (
+          {editingTestimonial && (
             <>
               <Form.Item name="user_id" label="User ID">
                 <Input disabled={viewMode} />

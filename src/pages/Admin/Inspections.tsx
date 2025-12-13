@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { Table, Drawer, Form, Input, Button, Upload, Select, Space, Tag, message } from "antd";
 import { UploadOutlined, SaveOutlined, CloseOutlined, EyeOutlined, EditOutlined } from "@ant-design/icons";
+import type { RcFile, UploadFile, UploadChangeParam } from "antd/es/upload";
 
 const { Option } = Select;
 
@@ -43,24 +44,12 @@ const mockInspections: Inspection[] = [
     photo_video_required: false,
     reportUrl: "report2.pdf",
   },
-  {
-    inspection_id: "3",
-    user_id: "USR003",
-    supplier_id: "SUP003",
-    product_type: "Oilseeds",
-    inspection_type: "factory visit",
-    date: "2025-11-13",
-    status: "rejected",
-    remarks: "Low quality",
-    photo_video_required: true,
-    reportUrl: "https://www.w3schools.com/html/movie.mp4",
-  },
 ];
 
 const Inspections: React.FC = () => {
   const [inspections, setInspections] = useState<Inspection[]>([]);
   const [filteredInspections, setFilteredInspections] = useState<Inspection[]>([]);
-  const [viewDrawerOpen, setViewDrawerOpen] = useState(false);
+  // const [viewDrawerOpen, setViewDrawerOpen] = useState(false);
   const [respondDrawerOpen, setRespondDrawerOpen] = useState(false);
   const [selectedInspection, setSelectedInspection] = useState<Inspection | null>(null);
   const [loading, setLoading] = useState(false);
@@ -74,12 +63,14 @@ const Inspections: React.FC = () => {
 
   const filterByType = (type: Inspection["inspection_type"] | "all") => {
     setActiveFilter(type);
-    setFilteredInspections(type === "all" ? inspections : inspections.filter(i => i.inspection_type === type));
+    setFilteredInspections(
+      type === "all" ? inspections : inspections.filter(i => i.inspection_type === type)
+    );
   };
 
   const handleView = (inspection: Inspection) => {
     setSelectedInspection(inspection);
-    setViewDrawerOpen(true);
+    // setViewDrawerOpen(true);
   };
 
   const handleRespond = (inspection: Inspection) => {
@@ -87,7 +78,16 @@ const Inspections: React.FC = () => {
     form.setFieldsValue({
       status: inspection.status,
       remarks: inspection.remarks,
-      reportUrl: inspection.reportUrl ? [{ name: inspection.reportUrl, url: inspection.reportUrl }] : [],
+      reportUrl: inspection.reportUrl
+        ? [
+            {
+              uid: "-1",
+              name: inspection.reportUrl.split("/").pop() || "file",
+              status: "done",
+              url: inspection.reportUrl,
+            } as UploadFile
+          ]
+        : [],
     });
     setRespondDrawerOpen(true);
   };
@@ -98,12 +98,20 @@ const Inspections: React.FC = () => {
       const values = await form.validateFields();
       setLoading(true);
 
-      // Get uploaded file URL
-      const uploadedFile = values.reportUrl?.[0]?.originFileObj
-        ? URL.createObjectURL(values.reportUrl[0].originFileObj)
-        : selectedInspection.reportUrl;
+      let uploadedFileUrl = selectedInspection.reportUrl;
 
-      const updatedInspection = { ...selectedInspection, ...values, reportUrl: uploadedFile };
+      if (values.reportUrl && values.reportUrl.length > 0) {
+        const fileObj = values.reportUrl[0].originFileObj as RcFile | undefined;
+        if (fileObj) {
+          uploadedFileUrl = URL.createObjectURL(fileObj);
+        }
+      }
+
+      const updatedInspection: Inspection = {
+        ...selectedInspection,
+        ...values,
+        reportUrl: uploadedFileUrl,
+      };
 
       setInspections(prev =>
         prev.map(i => (i.inspection_id === selectedInspection.inspection_id ? updatedInspection : i))
@@ -112,11 +120,12 @@ const Inspections: React.FC = () => {
         prev.map(i => (i.inspection_id === selectedInspection.inspection_id ? updatedInspection : i))
       );
 
-      message.success("Inspection responded successfully to buyer");
+      message.success("Inspection responded successfully");
       setRespondDrawerOpen(false);
       setSelectedInspection(null);
       form.resetFields();
     } catch (err) {
+      console.error(err);
       message.error("Failed to update inspection");
     } finally {
       setLoading(false);
@@ -139,7 +148,7 @@ const Inspections: React.FC = () => {
     {
       title: "Action",
       key: "action",
-      render: (_: any, record: Inspection) => (
+      render: (_: unknown, record: Inspection) => (
         <Space>
           <Button
             type="primary"
@@ -163,8 +172,8 @@ const Inspections: React.FC = () => {
   ];
 
   return (
-    <div style={{ padding: 24, fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}>
-      <h2 style={{ color: "#0F3952", marginBottom: 16, fontSize: 22 }}>Inspections</h2>
+    <div style={{ padding: 24 }}>
+      <h2 style={{ color: "#0F3952", marginBottom: 16 }}>Inspections</h2>
 
       <Space style={{ marginBottom: 16 }}>
         {(["all", "sample", "pre-shipment", "factory visit"] as const).map(type => (
@@ -185,40 +194,6 @@ const Inspections: React.FC = () => {
       </Space>
 
       <Table dataSource={filteredInspections} columns={columns} rowKey="inspection_id" pagination={{ pageSize: 5 }} />
-
-      {/* View Drawer */}
-      <Drawer
-        title={selectedInspection ? `Inspection Details - ${selectedInspection.product_type}` : "Inspection"}
-        width={450}
-        open={viewDrawerOpen}
-        onClose={() => setViewDrawerOpen(false)}
-      >
-        {selectedInspection && (
-          <Space direction="vertical" style={{ width: "100%" }}>
-            <p><strong>User ID:</strong> {selectedInspection.user_id}</p>
-            <p><strong>Supplier ID:</strong> {selectedInspection.supplier_id}</p>
-            <p><strong>Product Type:</strong> {selectedInspection.product_type}</p>
-            <p><strong>Inspection Type:</strong> {selectedInspection.inspection_type}</p>
-            <p><strong>Date:</strong> {selectedInspection.date}</p>
-            <p><strong>Status:</strong> {selectedInspection.status.toUpperCase()}</p>
-            <p><strong>Remarks:</strong> {selectedInspection.remarks || "N/A"}</p>
-            <p>
-              <strong>Photo/Video Required:</strong>{" "}
-              {selectedInspection.photo_video_required ? (
-                selectedInspection.reportUrl ? (
-                  <video width="100%" controls style={{ marginTop: 8 }}>
-                    <source src={selectedInspection.reportUrl} type="video/mp4" />
-                  </video>
-                ) : (
-                  "Yes"
-                )
-              ) : (
-                "No"
-              )}
-            </p>
-          </Space>
-        )}
-      </Drawer>
 
       {/* Respond Drawer */}
       <Drawer
@@ -245,9 +220,9 @@ const Inspections: React.FC = () => {
               name="reportUrl"
               label="Upload Report / Video"
               valuePropName="fileList"
-              getValueFromEvent={(e: any) => e?.fileList}
+              getValueFromEvent={(e: UploadChangeParam<UploadFile<RcFile>>) => e?.fileList}
             >
-              <Upload name="report" listType="text" maxCount={1}>
+              <Upload name="report" listType="text" maxCount={1} beforeUpload={() => false}>
                 <Button icon={<UploadOutlined />}>Click to Upload</Button>
               </Upload>
             </Form.Item>
@@ -255,9 +230,15 @@ const Inspections: React.FC = () => {
             {selectedInspection.reportUrl && (
               <div style={{ marginTop: 16 }}>
                 <p><strong>Current Video / Report:</strong></p>
-                <video width="100%" controls>
-                  <source src={selectedInspection.reportUrl} type="video/mp4" />
-                </video>
+                {selectedInspection.reportUrl.endsWith(".mp4") ? (
+                  <video width="100%" controls>
+                    <source src={selectedInspection.reportUrl} type="video/mp4" />
+                  </video>
+                ) : (
+                  <a href={selectedInspection.reportUrl} target="_blank" rel="noreferrer">
+                    {selectedInspection.reportUrl}
+                  </a>
+                )}
               </div>
             )}
 

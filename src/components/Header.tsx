@@ -1,22 +1,27 @@
-// src/components/Header.tsx
 import React from 'react';
 import { Button, Dropdown, Menu } from 'antd';
 import { BellOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import type { Role } from './Sidebar';
 
 interface HeaderProps {
-  role: string;
+  role: Role;
   email: string;
+  setRole: React.Dispatch<React.SetStateAction<Role | null>>;
 }
 
-const Header: React.FC<HeaderProps> = ({ role, email }) => {
+const Header: React.FC<HeaderProps> = ({ role, email, setRole }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    navigate('/'); // Redirect to home
+    setRole(null);
+    localStorage.removeItem("role");
+    localStorage.removeItem("email");
+    sessionStorage.removeItem("role");
+    sessionStorage.removeItem("email");
+    navigate('/');
   };
 
-  // User dropdown menu
   const menu = (
     <Menu
       items={[
@@ -34,24 +39,14 @@ const Header: React.FC<HeaderProps> = ({ role, email }) => {
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 flex justify-between items-center bg-white border-b border-gray-200 shadow px-5 h-16">
-      {/* Page title */}
       <div className="text-xl font-semibold ml-64 text-gray-800 truncate">Dashboard</div>
-
-      {/* Right side controls */}
       <div className="flex items-center gap-4">
-        {/* Notifications */}
         <Button type="text" icon={<BellOutlined style={{ fontSize: 20 }} />}>
           <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
         </Button>
-
-        {/* User profile dropdown */}
         <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
           <div className="flex items-center gap-2 cursor-pointer">
-            <img
-              src="https://via.placeholder.com/32"
-              alt="Profile"
-              className="rounded-full"
-            />
+            <img src="https://via.placeholder.com/32" alt="Profile" className="rounded-full" />
             <span className="hidden md:inline font-medium text-gray-700 capitalize">
               {role.replace('-', ' ')}
             </span>
@@ -59,7 +54,6 @@ const Header: React.FC<HeaderProps> = ({ role, email }) => {
         </Dropdown>
       </div>
 
-      {/* Custom styles for Logout */}
       <style>{`
         .logout-text {
           display: inline-block;
